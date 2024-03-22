@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:chat_app/Utils/UtilLink.dart';
 import 'package:chat_app/Utils/Utils.dart';
 import 'package:http/http.dart' as http;
 
 class APICaller {
   static APICaller _apiCaller = APICaller();
-  final String BASE_URL = "http://192.168.163.1:3000/";
   final _httpClient = http.Client();
 
   static APICaller getInstance() {
@@ -21,7 +21,7 @@ class APICaller {
       'Accept': 'application/json',
     };
 
-    Uri uri = Uri.parse(BASE_URL + endpoint);
+    Uri uri = Uri.parse(UtilLink.BASE_URL + endpoint);
     final finalUri = uri.replace(queryParameters: body);
 
     final response = await http
@@ -44,7 +44,7 @@ class APICaller {
       'Accept': 'application/json',
       'Authorization': 'bearer ${await Utils.getStringValueWithKey('token')}'
     };
-    final uri = Uri.parse(BASE_URL + endpoint);
+    final uri = Uri.parse(UtilLink.BASE_URL + endpoint);
     final response = await http
         .post(uri, headers: requestHeaders, body: jsonEncode(body))
         .timeout(
@@ -68,7 +68,7 @@ class APICaller {
       'Accept': 'application/json',
       'Authorization': 'bearer ${await Utils.getStringValueWithKey('token')}'
     };
-    final uri = Uri.parse(BASE_URL + endpoint);
+    final uri = Uri.parse(UtilLink.BASE_URL + endpoint);
 
     final response = await http
         .put(uri, headers: requestHeaders, body: jsonEncode(body))
@@ -93,7 +93,7 @@ class APICaller {
       'Accept': 'application/json',
       'Authorization': 'bearer ${await Utils.getStringValueWithKey('token')}'
     };
-    final uri = Uri.parse(BASE_URL + endpoint);
+    final uri = Uri.parse(UtilLink.BASE_URL + endpoint);
 
     final response = await http
         .delete(uri, headers: requestHeaders, body: jsonEncode(body))
@@ -118,7 +118,7 @@ class APICaller {
       'Accept': 'application/json',
       'Authorization': 'bearer ${await Utils.getStringValueWithKey('token')}'
     };
-    final uri = Uri.parse(BASE_URL + endpoint);
+    final uri = Uri.parse(UtilLink.BASE_URL + endpoint);
 
     final request = http.MultipartRequest('POST', uri);
     request.files
