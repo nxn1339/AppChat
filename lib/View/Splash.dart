@@ -1,3 +1,4 @@
+import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,21 +49,26 @@ class Splash extends StatelessWidget {
                     const SizedBox(
                       height: 40,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: UtilColor.buttonBlack,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(50))),
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      width: size.width,
-                      child: const Center(
-                        child: Text(
-                          'Đăng nhập',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        Navigation.navigateTo(page: 'LoginScreen');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: UtilColor.buttonBlack,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(50))),
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        width: size.width,
+                        child: const Center(
+                          child: Text(
+                            'Đăng nhập',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
