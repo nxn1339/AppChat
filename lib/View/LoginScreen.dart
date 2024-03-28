@@ -1,9 +1,14 @@
+import 'package:chat_app/Controller/LoginController.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:chat_app/Utils/Utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
+  var delete = Get.delete<LoginController>();
+  var controller = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +48,42 @@ class LoginScreen extends StatelessWidget {
                         Utils.textField(
                             icon: Icon(Icons.person),
                             hintText: 'Nhập tài khoản',
-                            maxLines: 1),
+                            maxLines: 1,
+                            controller: controller.textEditUserName),
                         SizedBox(
                           height: 10,
                         ),
-                        Utils.textFieldPass(
-                            icon: Icon(Icons.lock),
-                            hintText: 'Nhập mật khẩu',
-                            changed: (value) {},
-                            obscureText: true),
+                        Obx(
+                          () => Utils.textFieldPass(
+                              icon: Icon(Icons.lock),
+                              controller: controller.textEditPassword,
+                              hintText: 'Nhập mật khẩu',
+                              changed: (value) {},
+                              onTap: () {
+                                controller.changeShowPass();
+                              },
+                              obscureText: !controller.isShowPass.value),
+                        ),
+                        const SizedBox(
+                          height: 14,
+                        ),
+                        Align(
+                          alignment: FractionalOffset.centerRight,
+                          child: RichText(
+                              text: TextSpan(
+                                  children: [
+                                const TextSpan(text: 'Tạo tài khoản mới? '),
+                                TextSpan(
+                                    text: 'Đăng ký',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: UtilColor.textBase,
+                                        fontWeight: FontWeight.w800))
+                              ],
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: UtilColor.textGrey))),
+                        ),
                       ],
                     ),
                   ),

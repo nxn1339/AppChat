@@ -166,37 +166,45 @@ class Utils {
       bool? obscureText,
       String? hintText,
       VoidCallback? onTap}) {
-    return Row(
+    return Column(
       children: [
-        icon,
-        const SizedBox(
-          width: 8,
+        Row(
+          children: [
+            icon,
+            const SizedBox(
+              width: 8,
+            ),
+            Flexible(
+              child: TextField(
+                onChanged: changed,
+                controller: controller,
+                decoration: InputDecoration(
+                    border: InputBorder.none, hintText: hintText),
+                obscureText: obscureText!,
+              ),
+            ),
+            GestureDetector(
+              onTap: onTap,
+              child: obscureText
+                  ? SvgPicture.asset(
+                      'assets/icons/hide_eye.svg',
+                      height: 20,
+                      width: 20,
+                      color: Colors.black,
+                    )
+                  : SvgPicture.asset(
+                      'assets/icons/show_eye.svg',
+                      height: 20,
+                      width: 20,
+                      color: Colors.black,
+                    ),
+            ),
+          ],
         ),
-        Flexible(
-          child: TextField(
-            onChanged: changed,
-            controller: controller,
-            decoration:
-                InputDecoration(border: InputBorder.none, hintText: hintText),
-            obscureText: obscureText!,
-          ),
-        ),
-        GestureDetector(
-          onTap: onTap,
-          child: obscureText
-              ? SvgPicture.asset(
-                  'assets/icons/hide_eye.svg',
-                  height: 20,
-                  width: 20,
-                  color: Colors.black,
-                )
-              : SvgPicture.asset(
-                  'assets/icons/show_eye.svg',
-                  height: 20,
-                  width: 20,
-                  color: Colors.black,
-                ),
-        ),
+        Container(
+          height: 1,
+          color: Color.fromRGBO(221, 225, 231, 1),
+        )
       ],
     );
   }
