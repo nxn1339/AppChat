@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -245,5 +246,22 @@ class Utils {
       print(e);
     }
     return files;
+  }
+
+  static Widget buttonBlack(BuildContext context, String content) {
+    return Container(
+      decoration: BoxDecoration(
+          color: UtilColor.buttonBlack,
+          borderRadius: const BorderRadius.all(Radius.circular(16))),
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      width: MediaQuery.of(context).size.width,
+      child: Text(
+        content,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+            fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
+      ),
+    );
   }
 }
