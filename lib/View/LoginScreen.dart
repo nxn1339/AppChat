@@ -1,4 +1,5 @@
 import 'package:chat_app/Controller/LoginController.dart';
+import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:chat_app/Utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,11 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Utils.buttonBlack(context, 'Đăng nhập'),
+              GestureDetector(
+                  onTap: () {
+                    Navigation.navigateGetOffAll(page: 'HomeScreen');
+                  },
+                  child: Utils.buttonBlack(context, 'Đăng nhập')),
             ],
           )),
     );
