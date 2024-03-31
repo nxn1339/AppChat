@@ -128,6 +128,37 @@ class Utils {
     );
   }
 
+  static Widget textFieldCustom(
+      {required Widget icon,
+      TextEditingController? controller,
+      String? hintText,
+      TextInputType? textInputType,
+      List<TextInputFormatter>? inputFormatters,
+      int? maxLines,
+      ValueChanged? onChanged,
+      bool? enabled,
+      TextStyle? style}) {
+    return Row(children: [
+      icon,
+      const SizedBox(
+        width: 8,
+      ),
+      Flexible(
+        child: TextField(
+          style: style,
+          enabled: enabled,
+          onChanged: onChanged,
+          controller: controller,
+          maxLines: maxLines,
+          keyboardType: textInputType,
+          inputFormatters: inputFormatters,
+          decoration:
+              InputDecoration(border: InputBorder.none, hintText: hintText),
+        ),
+      ),
+    ]);
+  }
+
   static Widget textFieldMuti(
       {required Widget icon,
       TextEditingController? controller,
