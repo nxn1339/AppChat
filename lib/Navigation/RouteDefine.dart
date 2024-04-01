@@ -1,5 +1,6 @@
-import 'package:chat_app/View/HomeScreen.dart';
-import 'package:chat_app/View/LoginScreen.dart';
+import 'package:chat_app/View/Chat/MessageSingle.dart';
+import 'package:chat_app/View/Home/HomeScreen.dart';
+import 'package:chat_app/View/Authen/LoginScreen.dart';
 
 class RouteDefine {
   static dynamic getPageByName(String pageName) {
@@ -8,6 +9,8 @@ class RouteDefine {
       return LoginScreen();
       case 'HomeScreen':
       return HomeScreen();
+      case 'MessageSingle':
+      return MessageSingle();
     }
   }
 }
