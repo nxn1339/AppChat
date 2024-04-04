@@ -286,7 +286,7 @@ class HomeScreen extends StatelessWidget {
   Widget singleChat(Group group) {
     return GestureDetector(
       onTap: () {
-        Navigation.navigateTo(page: 'MessageSingle');
+        Navigation.navigateTo(page: 'MessageSingle',arguments: group);
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 10),
