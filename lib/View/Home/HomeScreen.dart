@@ -1,4 +1,5 @@
 import 'package:chat_app/Controller/HomeController.dart';
+import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:chat_app/Utils/Utils.dart';
@@ -97,15 +98,17 @@ class HomeScreen extends StatelessWidget {
                     Obx(
                       () => Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: controller.listGroup.length,
-                          itemBuilder: (context, index) {
-                            if (controller.listGroup[index].type == 1) {
-                              return singleChat(controller.listGroup[index]);
-                            }
-                            return groupChat(controller.listGroup[index]);
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            controller.refressGroup();
                           },
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: controller.listGroup.length,
+                            itemBuilder: (context, index) {
+                              return singleChat(controller.listGroup[index]);
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -141,12 +144,17 @@ class HomeScreen extends StatelessWidget {
                     Obx(
                       () => Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: controller.listGroup.length,
-                          itemBuilder: (context, index) {
-                            return groupChat(controller.listGroup[index]);
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            controller.refressGroup();
                           },
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: controller.listGroup.length,
+                            itemBuilder: (context, index) {
+                              return groupChat(controller.listGroup[index]);
+                            },
+                          ),
                         ),
                       ),
                     )
@@ -182,12 +190,17 @@ class HomeScreen extends StatelessWidget {
                     Obx(
                       () => Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: controller.listGroup.length,
-                          itemBuilder: (context, index) {
-                            return singleChat(controller.listGroup[index]);
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            controller.refressGroup();
                           },
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: controller.listGroup.length,
+                            itemBuilder: (context, index) {
+                              return singleChat(controller.listGroup[index]);
+                            },
+                          ),
                         ),
                       ),
                     )
@@ -199,7 +212,7 @@ class HomeScreen extends StatelessWidget {
         ));
   }
 
-  Widget groupChat(Group group) {
+  Widget groupChat(MDGroup group) {
     return GestureDetector(
       onTap: () {
         print('Nhóm');
@@ -223,7 +236,7 @@ class HomeScreen extends StatelessWidget {
                     color: UtilColor.buttonBlue,
                     child: Center(
                       child: Text(
-                        group.nameGroup!.isEmpty ? 'A' : group.nameGroup![0],
+                        group.name!.isEmpty ? 'A' : group.name![0],
                         style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -249,7 +262,7 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    group.nameGroup ?? "",
+                    group.name ?? "",
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -257,22 +270,6 @@ class HomeScreen extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 6,
-                  ),
-                  Row(
-                    children: [
-                      Text('${group.nameUser ?? 'Bạn'}: ',
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: UtilColor.textGrey,
-                              fontWeight: FontWeight.w500)),
-                      Text(
-                        group.content ?? '',
-                        style: TextStyle(
-                            fontSize: 13,
-                            color: UtilColor.textBase,
-                            fontWeight: FontWeight.w500),
-                      )
-                    ],
                   ),
                 ],
               ),
@@ -283,10 +280,10 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget singleChat(Group group) {
+  Widget singleChat(MDGroup group) {
     return GestureDetector(
       onTap: () {
-        Navigation.navigateTo(page: 'MessageSingle',arguments: group);
+        Navigation.navigateTo(page: 'MessageSingle', arguments: group);
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 10),
@@ -306,7 +303,7 @@ class HomeScreen extends StatelessWidget {
                     color: UtilColor.buttonBlue,
                     child: Center(
                       child: Text(
-                        group.nameGroup!.isEmpty ? 'A' : group.nameGroup![0],
+                        group.name!.isEmpty ? 'A' : group.name![0],
                         style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -332,7 +329,7 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    group.nameUser ?? "",
+                    group.name ?? "",
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -340,13 +337,6 @@ class HomeScreen extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 6,
-                  ),
-                  Text(
-                    group.content ?? '',
-                    style: TextStyle(
-                        fontSize: 13,
-                        color: UtilColor.textBase,
-                        fontWeight: FontWeight.w500),
                   ),
                 ],
               ),

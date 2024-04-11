@@ -9,9 +9,11 @@ class MessageSingle extends StatelessWidget {
   MessageSingle({super.key});
   var delete = Get.delete<MessageSingleController>();
   var controller = Get.put(MessageSingleController());
+  Size size = Size(0, 0);
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -35,9 +37,9 @@ class MessageSingle extends StatelessWidget {
                       color: UtilColor.buttonBlue,
                       child: Center(
                         child: Text(
-                          Get.arguments.nameUser!.isEmpty
+                          Get.arguments.name!.isEmpty
                               ? 'A'
-                              : Get.arguments.nameUser![0],
+                              : Get.arguments.name![0],
                           style: const TextStyle(
                               fontSize: 16,
                               color: Colors.white,
@@ -48,7 +50,7 @@ class MessageSingle extends StatelessWidget {
               ),
             ),
             Text(
-              Get.arguments.nameUser,
+              Get.arguments.name,
               style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -66,21 +68,25 @@ class MessageSingle extends StatelessWidget {
               () => ListView.builder(
                 itemCount: controller.messages.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                      decoration: BoxDecoration(
-                          color: UtilColor.buttonBlue,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomRight: Radius.circular(10))),
-                      padding: EdgeInsets.symmetric(vertical: 6),
-                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                      child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            controller.messages[index],
-                            style: TextStyle(color: Colors.white),
-                          )));
+                  if (controller.messages[index] != "") {
+                    return Container(
+                        decoration: BoxDecoration(
+                            color: UtilColor.buttonBlue,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                                bottomRight: Radius.circular(10))),
+                        padding: EdgeInsets.symmetric(vertical: 6),
+                        margin: EdgeInsets.only(
+                            top: 10, bottom: 0, left: 3, right: 200),
+                        child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              controller.messages[index],
+                              style: TextStyle(color: Colors.white),
+                            )));
+                  }
+                  return Container();
                 },
               ),
             ),
@@ -117,7 +123,10 @@ class MessageSingle extends StatelessWidget {
 }
 
 void _sendMessage(String message) {
+  var userId = 1;
   if (message.isNotEmpty) {
-    SocketIOCaller.getInstance().socket?.emit('chat message', message);
+    SocketIOCaller.getInstance()
+        .socket
+        ?.emit('chat message', {'senderId': userId, 'message': message});
   }
 }
