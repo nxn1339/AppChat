@@ -92,7 +92,7 @@ class LoginScreen extends StatelessWidget {
               ),
               GestureDetector(
                   onTap: () {
-                    Navigation.navigateGetOffAll(page: 'HomeScreen');
+                    controller.login();
                   },
                   child: Utils.buttonBlack(context, 'Đăng nhập')),
             ],

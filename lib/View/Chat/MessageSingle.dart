@@ -66,25 +66,51 @@ class MessageSingle extends StatelessWidget {
           Expanded(
             child: Obx(
               () => ListView.builder(
-                itemCount: controller.messages.length,
+                itemCount: controller.messageList.length,
                 itemBuilder: (context, index) {
-                  if (controller.messages[index] != "") {
-                    return Container(
-                        decoration: BoxDecoration(
-                            color: UtilColor.buttonBlue,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10),
-                                bottomRight: Radius.circular(10))),
-                        padding: EdgeInsets.symmetric(vertical: 6),
-                        margin: EdgeInsets.only(
-                            top: 10, bottom: 0, left: 3, right: 200),
+                  if (controller.messageList[index].content != "") {
+                    if (controller.uuid.value !=
+                        controller.messageList[index].idUser) {
+                      return Align(
+                        alignment: Alignment.centerLeft,
                         child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text(
-                              controller.messages[index],
-                              style: TextStyle(color: Colors.white),
-                            )));
+                            decoration: BoxDecoration(
+                                color: UtilColor.buttonBlue,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomRight: Radius.circular(10))),
+                            padding: EdgeInsets.symmetric(vertical: 6),
+                            margin: EdgeInsets.only(
+                                top: 10, bottom: 0, left: 3, right: 3),
+                            child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  controller.messageList[index].content ?? "",
+                                  style: TextStyle(color: Colors.white),
+                                ))),
+                      );
+                    } else {
+                      return Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                            decoration: BoxDecoration(
+                                color: UtilColor.buttonBlue,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10))),
+                            padding: EdgeInsets.symmetric(vertical: 6),
+                            margin: EdgeInsets.only(
+                                top: 10, bottom: 0, left: 3, right: 3),
+                            child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  controller.messageList[index].content ?? "",
+                                  style: TextStyle(color: Colors.white),
+                                ))),
+                      );
+                    }
                   }
                   return Container();
                 },
@@ -122,11 +148,12 @@ class MessageSingle extends StatelessWidget {
   }
 }
 
-void _sendMessage(String message) {
-  var userId = 1;
-  if (message.isNotEmpty) {
-    SocketIOCaller.getInstance()
-        .socket
-        ?.emit('chat message', {'senderId': userId, 'message': message});
+void _sendMessage(String content) async {
+  var idUser = await Utils.getStringValueWithKey('id');
+  if (content.isNotEmpty) {
+    SocketIOCaller.getInstance().socket?.emit('chat message', {
+      'id_user': idUser,
+      'content': content,
+    });
   }
 }
