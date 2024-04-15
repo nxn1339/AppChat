@@ -73,22 +73,39 @@ class MessageSingle extends StatelessWidget {
                         controller.messageList[index].idUser) {
                       return Align(
                         alignment: Alignment.centerLeft,
-                        child: Container(
-                            decoration: BoxDecoration(
-                                color: UtilColor.buttonBlue,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomRight: Radius.circular(10))),
-                            padding: EdgeInsets.symmetric(vertical: 6),
-                            margin: EdgeInsets.only(
-                                top: 10, bottom: 0, left: 3, right: 3),
-                            child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 10),
-                                child: Text(
-                                  controller.messageList[index].content ?? "",
-                                  style: TextStyle(color: Colors.white),
-                                ))),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            ClipOval(
+                              child: Image.network(
+                                controller.messageList[index].avatar??"",
+                                height: 20,
+                                width: 20,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(height: 20,
+                                  width: 20,color: Colors.amber,child: Text('Error'),);
+                                },
+                              ),
+                            ),
+                            Container(
+                                decoration: BoxDecoration(
+                                    color: UtilColor.buttonBlue,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                        bottomRight: Radius.circular(10))),
+                                padding: EdgeInsets.symmetric(vertical: 6),
+                                margin: EdgeInsets.only(
+                                    top: 10, bottom: 0, left: 3, right: 3),
+                                child: Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 10),
+                                    child: Text(
+                                      controller.messageList[index].content ?? "",
+                                      style: TextStyle(color: Colors.white),
+                                    ))),
+                          ],
+                        ),
                       );
                     } else {
                       return Align(
@@ -104,9 +121,11 @@ class MessageSingle extends StatelessWidget {
                             margin: EdgeInsets.only(
                                 top: 10, bottom: 0, left: 3, right: 3),
                             child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                margin:
+                                    EdgeInsets.symmetric(horizontal: 10),
                                 child: Text(
-                                  controller.messageList[index].content ?? "",
+                                  controller.messageList[index].content ??
+                                      "",
                                   style: TextStyle(color: Colors.white),
                                 ))),
                       );
@@ -150,10 +169,16 @@ class MessageSingle extends StatelessWidget {
 
 void _sendMessage(String content) async {
   var idUser = await Utils.getStringValueWithKey('id');
+  var avatar =  await Utils.getStringValueWithKey('avatar');
+  var name =  await Utils.getStringValueWithKey('name');
   if (content.isNotEmpty) {
     SocketIOCaller.getInstance().socket?.emit('chat message', {
       'id_user': idUser,
       'content': content,
+      'avatar': avatar,
+      'image': '',
+      'name': name,
+      'id_group': Get.arguments.id,   
     });
   }
 }
