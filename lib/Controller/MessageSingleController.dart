@@ -9,15 +9,35 @@ class MessageSingleController extends GetxController {
   TextEditingController textEditingMessage = TextEditingController();
   RxList<MDMessage> messageList = RxList<MDMessage>();
   RxString uuid = "".obs;
+  ScrollController scrollController = ScrollController();
   @override
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
     uuid.value = await Utils.getStringValueWithKey('id');
+    fechListChat();
     SocketIOCaller.getInstance().socket?.on('chat message', (data) {
       sendChat();
       messageList.add(MDMessage.fromJson(data));
+      scrollChat();
     });
+  }
+
+  void fechListChat() async {
+    try {
+      var response =
+          await APICaller.getInstance().get('chat/${Get.arguments.id}');
+      if (response != null) {
+        List<dynamic> list = response['data'];
+        var listItem =
+            list.map((dynamic json) => MDMessage.fromJson(json)).toList();
+        messageList.addAll(listItem);
+        messageList.refresh();
+        print(response);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   void sendChat() async {
@@ -29,7 +49,16 @@ class MessageSingleController extends GetxController {
     };
     var response = await APICaller.getInstance().post('chat', body);
     if (response != null) {
+      textEditingMessage.clear();
       print('Gửi thành công');
     }
+  }
+
+  void scrollChat() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent + 100,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 }

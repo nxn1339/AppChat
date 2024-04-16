@@ -61,11 +61,21 @@ class MessageSingle extends StatelessWidget {
         centerTitle: true,
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
+        children: [
           Expanded(
+            flex: 1,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 100,
             child: Obx(
               () => ListView.builder(
+                controller: controller.scrollController,
                 itemCount: controller.messageList.length,
                 itemBuilder: (context, index) {
                   if (controller.messageList[index].content != "") {
@@ -78,13 +88,17 @@ class MessageSingle extends StatelessWidget {
                           children: [
                             ClipOval(
                               child: Image.network(
-                                controller.messageList[index].avatar??"",
+                                controller.messageList[index].avatar ?? "",
                                 height: 20,
                                 width: 20,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
-                                  return Container(height: 20,
-                                  width: 20,color: Colors.amber,child: Text('Error'),);
+                                  return Container(
+                                    height: 20,
+                                    width: 20,
+                                    color: Colors.amber,
+                                    child: Text('Error'),
+                                  );
                                 },
                               ),
                             ),
@@ -121,11 +135,9 @@ class MessageSingle extends StatelessWidget {
                             margin: EdgeInsets.only(
                                 top: 10, bottom: 0, left: 3, right: 3),
                             child: Container(
-                                margin:
-                                    EdgeInsets.symmetric(horizontal: 10),
+                                margin: EdgeInsets.symmetric(horizontal: 10),
                                 child: Text(
-                                  controller.messageList[index].content ??
-                                      "",
+                                  controller.messageList[index].content ?? "",
                                   style: TextStyle(color: Colors.white),
                                 ))),
                       );
@@ -136,6 +148,7 @@ class MessageSingle extends StatelessWidget {
               ),
             ),
           ),
+
           Padding(
             padding: EdgeInsets.all(8.0),
             child: Row(
@@ -155,7 +168,7 @@ class MessageSingle extends StatelessWidget {
                   icon: Icon(Icons.send),
                   onPressed: () {
                     _sendMessage(controller.textEditingMessage.text);
-                    controller.textEditingMessage.clear();
+                    controller.scrollChat();
                   },
                 ),
               ],
@@ -169,8 +182,8 @@ class MessageSingle extends StatelessWidget {
 
 void _sendMessage(String content) async {
   var idUser = await Utils.getStringValueWithKey('id');
-  var avatar =  await Utils.getStringValueWithKey('avatar');
-  var name =  await Utils.getStringValueWithKey('name');
+  var avatar = await Utils.getStringValueWithKey('avatar');
+  var name = await Utils.getStringValueWithKey('name');
   if (content.isNotEmpty) {
     SocketIOCaller.getInstance().socket?.emit('chat message', {
       'id_user': idUser,
@@ -178,7 +191,7 @@ void _sendMessage(String content) async {
       'avatar': avatar,
       'image': '',
       'name': name,
-      'id_group': Get.arguments.id,   
+      'id_group': Get.arguments.id,
     });
   }
 }
