@@ -5,7 +5,7 @@ import 'package:chat_app/Utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-class MessageSingleController extends GetxController {
+class MessageGroupController extends GetxController {
   TextEditingController textEditingMessage = TextEditingController();
   RxList<MDMessage> messageList = RxList<MDMessage>();
   RxString uuid = "".obs;

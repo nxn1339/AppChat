@@ -1,14 +1,14 @@
-import 'package:chat_app/Controller/MessageSingleController.dart';
+import 'package:chat_app/Controller/MessageGroupController.dart';
 import 'package:chat_app/Service/SocketIO.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:chat_app/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MessageSingle extends StatelessWidget {
-  MessageSingle({super.key});
-  var delete = Get.delete<MessageSingleController>();
-  var controller = Get.put(MessageSingleController());
+class MessageGroup extends StatelessWidget {
+  MessageGroup({super.key});
+  var delete = Get.delete<MessageGroupController>();
+  var controller = Get.put(MessageGroupController());
   Size size = Size(0, 0);
 
   @override
@@ -113,9 +113,11 @@ class MessageSingle extends StatelessWidget {
                                 margin: EdgeInsets.only(
                                     top: 10, bottom: 0, left: 3, right: 3),
                                 child: Container(
-                                    margin: EdgeInsets.symmetric(horizontal: 10),
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 10),
                                     child: Text(
-                                      controller.messageList[index].content ?? "",
+                                      controller.messageList[index].content ??
+                                          "",
                                       style: TextStyle(color: Colors.white),
                                     ))),
                           ],
@@ -148,7 +150,6 @@ class MessageSingle extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: EdgeInsets.all(8.0),
             child: Row(

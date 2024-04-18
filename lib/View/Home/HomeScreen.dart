@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       body: DefaultTabController(
-        length: 3, // Số lượng tab
+        length: 2, // Số lượng tab
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -48,7 +48,6 @@ class HomeScreen extends StatelessWidget {
                 indicatorColor: UtilColor.textBase,
                 labelColor: UtilColor.textBase,
                 tabs: [
-                  Tab(text: 'Tất cả', icon: Icon(Icons.all_inbox)),
                   Tab(text: 'Nhóm', icon: Icon(Icons.group)),
                   Tab(
                     text: 'Cá nhân',
@@ -60,7 +59,6 @@ class HomeScreen extends StatelessWidget {
             Expanded(
               child: TabBarView(
                 children: [
-                  buildAllTab(context),
                   // Tab nhóm
                   buildGroupTab(context),
                   // Tab cá nhân
@@ -72,52 +70,6 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget buildAllTab(BuildContext context) {
-    return Container(
-        color: Colors.white,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          'Tất cả',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: UtilColor.textBase),
-                        )),
-                    Obx(
-                      () => Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        child: RefreshIndicator(
-                          onRefresh: () async {
-                            controller.refressGroup();
-                          },
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: controller.listGroup.length,
-                            itemBuilder: (context, index) {
-                              return singleChat(controller.listGroup[index]);
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ));
   }
 
   Widget buildGroupTab(BuildContext context) {
@@ -133,30 +85,53 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          'Hội nhóm',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: UtilColor.textBase),
-                        )),
-                    Obx(
-                      () => Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        child: RefreshIndicator(
-                          onRefresh: () async {
-                            controller.refressGroup();
-                          },
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: controller.listGroup.length,
-                            itemBuilder: (context, index) {
-                              return groupChat(controller.listGroup[index]);
-                            },
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Hội nhóm',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: UtilColor.textBase),
                           ),
-                        ),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: UtilColor.buttonBlack,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50))),
+                            height: 30,
+                            width: 60,
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
                       ),
+                    ),
+                    Obx(
+                      () => controller.listGroup.isEmpty
+                          ? Utils.noData()
+                          : Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: RefreshIndicator(
+                                onRefresh: () async {
+                                  controller.refressGroup();
+                                },
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: controller.listGroup.length,
+                                  itemBuilder: (context, index) {
+                                    return groupChat(
+                                        controller.listGroup[index]);
+                                  },
+                                ),
+                              ),
+                            ),
                     )
                   ],
                 ),
@@ -215,7 +190,7 @@ class HomeScreen extends StatelessWidget {
   Widget groupChat(MDGroup group) {
     return GestureDetector(
       onTap: () {
-        print('Nhóm');
+        Navigation.navigateTo(page: 'MessageGroup', arguments: group);
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 10),
@@ -282,9 +257,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget singleChat(MDGroup group) {
     return GestureDetector(
-      onTap: () {
-        Navigation.navigateTo(page: 'MessageSingle', arguments: group);
-      },
+      onTap: () {},
       child: Container(
         margin: EdgeInsets.only(bottom: 10),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [

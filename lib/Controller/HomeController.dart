@@ -1,27 +1,35 @@
 import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Service/APICaller.dart';
+import 'package:chat_app/Utils/Utils.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
   RxList<MDGroup> listGroup = RxList<MDGroup>();
+  String uuid = '';
+
   @override
-  void onInit() {
-    // TODO: implement onInit
+  void onInit() async {
     super.onInit();
+    await loadSavedText();
     fecthGroup();
+  }
+
+  loadSavedText() async {
+    if (await Utils.getStringValueWithKey('id') != '' ||
+        await Utils.getStringValueWithKey('id') != null) {
+      uuid = await Utils.getStringValueWithKey('id');
+    }
   }
 
   void fecthGroup() async {
     try {
-      var response = await APICaller.getInstance()
-          .get('group/b5b3190c-5397-11ee-b610-089798d3');
+      var response = await APICaller.getInstance().get('group/$uuid');
       if (response != null) {
         List<dynamic> list = response['data'];
         var listItem =
             list.map((dynamic json) => MDGroup.fromJson(json)).toList();
         listGroup.addAll(listItem);
         listGroup.refresh();
-        print(response);
       }
     } catch (e) {
       print(e);
@@ -32,5 +40,4 @@ class HomeController extends GetxController {
     listGroup.clear();
     fecthGroup();
   }
-
 }
