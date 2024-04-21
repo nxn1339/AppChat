@@ -26,6 +26,8 @@ class LoginController extends GetxController {
         saveUser(response);
         Utils.showSnackBar(
             title: "Thông báo", message: "Đăng nhập thành công !");
+      } else {
+        Utils.showSnackBar(title: 'Thông báo', message: response['message']);
       }
     } catch (e) {
       Utils.showSnackBar(title: 'Thông báo', message: '$e');

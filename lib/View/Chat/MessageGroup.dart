@@ -19,7 +19,7 @@ class MessageGroup extends StatelessWidget {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: true,
         foregroundColor: UtilColor.textBase,
-        elevation: 0,
+        elevation: 0.5,
         title: Column(
           children: [
             ClipOval(

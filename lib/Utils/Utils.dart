@@ -138,25 +138,32 @@ class Utils {
       ValueChanged? onChanged,
       bool? enabled,
       TextStyle? style}) {
-    return Row(children: [
-      icon,
-      const SizedBox(
-        width: 8,
-      ),
-      Flexible(
-        child: TextField(
-          style: style,
-          enabled: enabled,
-          onChanged: onChanged,
-          controller: controller,
-          maxLines: maxLines,
-          keyboardType: textInputType,
-          inputFormatters: inputFormatters,
-          decoration:
-              InputDecoration(border: InputBorder.none, hintText: hintText),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+          color: UtilColor.buttonGrey,
+          borderRadius: BorderRadius.all(Radius.circular(20))),
+      child: Row(children: [
+        icon,
+        const SizedBox(
+          width: 8,
         ),
-      ),
-    ]);
+        Flexible(
+          child: TextField(
+            style: style,
+            enabled: enabled,
+            onChanged: onChanged,
+            controller: controller,
+            maxLines: 1,
+            keyboardType: textInputType,
+            inputFormatters: inputFormatters,
+            decoration:
+                InputDecoration(border: InputBorder.none, hintText: hintText),
+          ),
+        ),
+      ]),
+    );
   }
 
   static Widget textFieldMuti(

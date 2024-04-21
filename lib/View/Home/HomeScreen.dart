@@ -34,14 +34,11 @@ class HomeScreen extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                       color: UtilColor.textBase),
                 )),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Utils.textFieldCustom(
-                  icon: Icon(Icons.search), hintText: 'Nhập tìm kiếm'),
+            SizedBox(
+              height: 10,
             ),
+            Utils.textFieldCustom(
+                icon: Icon(Icons.search), hintText: 'Nhập tìm kiếm'),
             Container(
               color: Colors.white,
               child: TabBar(
@@ -97,16 +94,21 @@ class HomeScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                                 color: UtilColor.textBase),
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: UtilColor.buttonBlack,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50))),
-                            height: 30,
-                            width: 60,
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.white,
+                          GestureDetector(
+                            onTap: () {
+                              Navigation.navigateTo(page: 'CreateGroup');
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: UtilColor.buttonBlack,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50))),
+                              height: 30,
+                              width: 60,
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
                             ),
                           )
                         ],
