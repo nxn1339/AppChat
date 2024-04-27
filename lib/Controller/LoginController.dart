@@ -22,7 +22,7 @@ class LoginController extends GetxController {
     try {
       var response = await APICaller.getInstance().post('user/login', body);
       if (response != null) {
-        Navigation.navigateGetOffAll(page: 'HomeScreen');
+        Navigation.navigateTo(page: 'HomeScreen');
         saveUser(response);
         Utils.showSnackBar(
             title: "Thông báo", message: "Đăng nhập thành công !");

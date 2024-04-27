@@ -1,3 +1,5 @@
+import 'package:chat_app/Controller/HomeController.dart';
+import 'package:chat_app/Controller/LoginController.dart';
 import 'package:chat_app/Model/MDUser.dart';
 import 'package:chat_app/Service/APICaller.dart';
 import 'package:chat_app/Utils/Utils.dart';
@@ -52,43 +54,45 @@ class CreateGroupController extends GetxController {
   }
 
   Future<void> addMemberInGroup(String idGroup) async {
-    await Future.forEach(listIDUserInGroup, (element) async {
-      if (element.isEmpty) {
-        listIDUserInGroup.remove(element);
-      }
-    });
     try {
+      listIDUserInGroup =
+          listIDUserInGroup.where((element) => !element.isEmpty).toList();
+
       for (var i = 0; i < listIDUserInGroup.length; i++) {
         var body = {
           "id_user": listIDUserInGroup[i],
           "id_group": idGroup,
         };
         var response = await APICaller.getInstance().post('group/member', body);
-        if (response != null) {
-          print('done');
-        }
       }
     } catch (e) {
-      print(e);
+      Utils.showSnackBar(title: "Thông báo", message: 'Có lỗi xảy ra !');
     }
   }
 
-  void createGroup() async {
-    var body = {
-      "name": textEditNameGroup.text,
-      "image": "",
-      "id_user": uuid,
-    };
+  Future<void> createGroup() async {
     try {
+      var body = {
+        "name": textEditNameGroup.text,
+        "image": "",
+        "id_user": uuid,
+      };
+
       var response = await APICaller.getInstance().post('group', body);
       if (response != null) {
-        await addMemberInGroup(response['data']['id']);
+        if (response['data']['MAX(id)'] != null) {
+          await addMemberInGroup(response['data']['MAX(id)']);
+        }
+        if (Get.isRegistered<HomeController>()) {
+          var homeController = Get.find<HomeController>();
+          homeController.refressGroup();
+        }
         Get.back();
         Utils.showSnackBar(
             title: "Thông báo", message: 'Thêm thành công Group');
       }
     } catch (e) {
-      print(e);
+      Utils.showSnackBar(title: "Thông báo", message: 'Có lỗi xảy ra !');
     }
   }
 }

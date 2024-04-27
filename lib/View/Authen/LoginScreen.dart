@@ -1,9 +1,7 @@
 import 'package:chat_app/Controller/LoginController.dart';
-import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:chat_app/Utils/Utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
