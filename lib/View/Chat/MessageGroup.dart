@@ -1,4 +1,5 @@
 import 'package:chat_app/Controller/MessageGroupController.dart';
+import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Service/SocketIO.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:chat_app/Utils/Utils.dart';
@@ -7,7 +8,6 @@ import 'package:get/get.dart';
 
 class MessageGroup extends StatelessWidget {
   MessageGroup({super.key});
-  var delete = Get.delete<MessageGroupController>();
   var controller = Get.put(MessageGroupController());
   Size size = Size(0, 0);
 
@@ -20,49 +20,57 @@ class MessageGroup extends StatelessWidget {
         automaticallyImplyLeading: true,
         foregroundColor: UtilColor.textBase,
         elevation: 0.5,
-        title: Column(
-          children: [
-            ClipOval(
-              child: Image.network(
-                '${Get.arguments.image}',
-                height: 40,
-                width: 40,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                      height: 40,
-                      width: 40,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 6),
-                      color: UtilColor.buttonBlue,
-                      child: Center(
-                        child: Text(
-                          Get.arguments.name!.isEmpty
-                              ? 'A'
-                              : Get.arguments.name![0],
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ));
-                },
-              ),
+        title: GestureDetector(
+          onTap: () {
+            Navigation.navigateTo(
+                page: 'MessageGroupDetail', arguments: controller.group);
+          },
+          child: Obx(
+            () => Column(
+              children: [
+                ClipOval(
+                  child: Image.network(
+                    '${controller.group.value.image}',
+                    height: 40,
+                    width: 40,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                          height: 40,
+                          width: 40,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 6),
+                          color: UtilColor.buttonBlue,
+                          child: Center(
+                            child: Text(
+                              controller.group.value.name!.isEmpty
+                                  ? 'A'
+                                  : controller.group.value.name![0],
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ));
+                    },
+                  ),
+                ),
+                Text(
+                  '${controller.group.value.name}',
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: UtilColor.textBase),
+                )
+              ],
             ),
-            Text(
-              Get.arguments.name,
-              style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: UtilColor.textBase),
-            )
-          ],
+          ),
         ),
         centerTitle: true,
       ),
       body: Column(
         children: [
-          Expanded(
+          const Expanded(
             flex: 1,
             child: SingleChildScrollView(
               child: Column(
@@ -156,9 +164,6 @@ class MessageGroup extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                     child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(16))),
                   child: Utils.textFieldCustom(
                       icon: Icon(Icons.file_present),
                       controller: controller.textEditingMessage,

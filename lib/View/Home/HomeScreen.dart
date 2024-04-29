@@ -1,4 +1,5 @@
 import 'package:chat_app/Controller/HomeController.dart';
+import 'package:chat_app/Controller/MessageGroupController.dart';
 import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
@@ -192,6 +193,9 @@ class HomeScreen extends StatelessWidget {
   Widget groupChat(MDGroup group) {
     return GestureDetector(
       onTap: () {
+        if (Get.isRegistered<MessageGroupController>()) {
+          Get.find<MessageGroupController>().createStart();
+        }
         Navigation.navigateTo(page: 'MessageGroup', arguments: group);
       },
       child: Container(
