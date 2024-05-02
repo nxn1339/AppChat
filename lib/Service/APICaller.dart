@@ -95,9 +95,7 @@ class APICaller {
     };
     final uri = Uri.parse(UtilLink.BASE_URL + endpoint);
 
-    final response = await http
-        .delete(uri, headers: requestHeaders, body: jsonEncode(body))
-        .timeout(
+    final response = await http.delete(uri, headers: requestHeaders).timeout(
       const Duration(seconds: 30),
       onTimeout: () {
         return http.Response(
