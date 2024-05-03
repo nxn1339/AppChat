@@ -2,6 +2,7 @@ import 'package:chat_app/Controller/MessageGroupController.dart';
 import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Service/SocketIO.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
+import 'package:chat_app/Utils/UtilLink.dart';
 import 'package:chat_app/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -87,47 +88,120 @@ class MessageGroup extends StatelessWidget {
                 itemCount: controller.messageList.length,
                 itemBuilder: (context, index) {
                   if (controller.messageList[index].content != "") {
-                    if (controller.uuid.value !=
+                    if (controller.uuid.value ==
                         controller.messageList[index].idUser) {
                       return Align(
                         alignment: Alignment.centerLeft,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                        child: Column(
                           children: [
-                            ClipOval(
-                              child: Image.network(
-                                controller.messageList[index].avatar ?? "",
-                                height: 20,
-                                width: 20,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    height: 20,
-                                    width: 20,
-                                    color: Colors.amber,
-                                    child: Text('Error'),
-                                  );
-                                },
-                              ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ClipOval(
+                                  child: Image.network(
+                                    '${UtilLink.BASE_URL}${controller.messageList[index].avatar}',
+                                    height: 30,
+                                    width: 30,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        height: 30,
+                                        width: 30,
+                                        color: Colors.amber,
+                                        child: Text('Error'),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                controller.messageList[index].content!.length >
+                                        40
+                                    ? Expanded(
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                color:
+                                                    UtilColor.buttonLightBlue,
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(10),
+                                                        topRight:
+                                                            Radius.circular(10),
+                                                        bottomRight:
+                                                            Radius.circular(
+                                                                10))),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 6),
+                                            margin: const EdgeInsets.only(
+                                                top: 10,
+                                                bottom: 0,
+                                                left: 3,
+                                                right: 3),
+                                            child: Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10),
+                                                child: Text(
+                                                  controller.messageList[index]
+                                                          .content ??
+                                                      "",
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ))),
+                                      )
+                                    : Container(
+                                        decoration: BoxDecoration(
+                                            color: UtilColor.buttonLightBlue,
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    topRight:
+                                                        Radius.circular(10),
+                                                    bottomRight:
+                                                        Radius.circular(10))),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 6),
+                                        margin: const EdgeInsets.only(
+                                            top: 10,
+                                            bottom: 0,
+                                            left: 3,
+                                            right: 3),
+                                        child: Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Text(
+                                              controller.messageList[index]
+                                                      .content ??
+                                                  "",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ))),
+                                Row(
+                                  children: [
+                                    Text(
+                                      controller.messageList[index].name
+                                          .toString(),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: UtilColor.textGrey),
+                                    ),
+                                    const SizedBox(
+                                      width: 6,
+                                    ),
+                                    Text(
+                                      controller.convertDateTimeFormat(
+                                          controller.messageList[index].time
+                                              .toString()),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: UtilColor.textBase),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            Container(
-                                decoration: BoxDecoration(
-                                    color: UtilColor.buttonBlue,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10),
-                                        bottomRight: Radius.circular(10))),
-                                padding: EdgeInsets.symmetric(vertical: 6),
-                                margin: EdgeInsets.only(
-                                    top: 10, bottom: 0, left: 3, right: 3),
-                                child: Container(
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    child: Text(
-                                      controller.messageList[index].content ??
-                                          "",
-                                      style: TextStyle(color: Colors.white),
-                                    ))),
                           ],
                         ),
                       );
@@ -137,18 +211,19 @@ class MessageGroup extends StatelessWidget {
                         child: Container(
                             decoration: BoxDecoration(
                                 color: UtilColor.buttonBlue,
-                                borderRadius: BorderRadius.only(
+                                borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(10),
                                     topRight: Radius.circular(10),
                                     bottomLeft: Radius.circular(10))),
-                            padding: EdgeInsets.symmetric(vertical: 6),
-                            margin: EdgeInsets.only(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            margin: const EdgeInsets.only(
                                 top: 10, bottom: 0, left: 3, right: 3),
                             child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 child: Text(
                                   controller.messageList[index].content ?? "",
-                                  style: TextStyle(color: Colors.white),
+                                  style: const TextStyle(color: Colors.white),
                                 ))),
                       );
                     }
@@ -193,6 +268,7 @@ void _sendMessage(String content) async {
   if (content.isNotEmpty) {
     SocketIOCaller.getInstance().socket?.emit('chat message', {
       'id_user': idUser,
+      'time': DateTime.now().toIso8601String(),
       'content': content,
       'avatar': avatar,
       'image': '',

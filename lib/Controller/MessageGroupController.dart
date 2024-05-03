@@ -6,6 +6,7 @@ import 'package:chat_app/Utils/UtilLink.dart';
 import 'package:chat_app/Utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class MessageGroupController extends GetxController {
   TextEditingController textEditingMessage = TextEditingController();
@@ -15,7 +16,6 @@ class MessageGroupController extends GetxController {
   Rx<MDGroup> group = new MDGroup().obs;
   @override
   void onInit() async {
-    // TODO: implement onInit
     super.onInit();
     createStart();
     SocketIOCaller.getInstance().socket?.on('chat message', (data) {
@@ -62,6 +62,31 @@ class MessageGroupController extends GetxController {
       textEditingMessage.clear();
       print('Gửi thành công');
     }
+  }
+
+  String convertDateTimeFormat(String inputDateTime) {
+    // Định nghĩa định dạng của ngày tháng vào
+    DateFormat inputFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+    // Định nghĩa định dạng của ngày tháng đầu ra
+    DateFormat outputFormat = DateFormat("yyyy/MM/dd HH:mm");
+
+    // Chuyển đổi ngày tháng từ định dạng đầu vào thành DateTime
+    DateTime dateTime = inputFormat.parse(inputDateTime.substring(0, 23));
+
+    // Kiểm tra xem ngày hiện tại có trùng với ngày trong chuỗi không
+    DateTime currentDate = DateTime.now();
+    if (dateTime.year == currentDate.year &&
+        dateTime.month == currentDate.month &&
+        dateTime.day == currentDate.day) {
+      // Nếu là ngày hiện tại, chỉ hiển thị giờ
+      outputFormat = DateFormat("HH:mm");
+    }
+
+    // Chuyển đổi DateTime thành chuỗi với định dạng mong muốn
+    String outputDateTime = outputFormat.format(dateTime);
+
+    return outputDateTime;
   }
 
   void scrollChat() {

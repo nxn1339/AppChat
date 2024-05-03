@@ -2,6 +2,7 @@ class MDMessage {
   String? id;
   String? content;
   String? image;
+  String? time;
   String? idGroup;
   String? idUser;
   String? name;
@@ -11,6 +12,7 @@ class MDMessage {
       {this.id,
       this.content,
       this.image,
+      this.time,
       this.idGroup,
       this.idUser,
       this.name,
@@ -20,6 +22,7 @@ class MDMessage {
     id = json['id'];
     content = json['content'];
     image = json['image'];
+    time = json['time'];
     idGroup = json['id_group'];
     idUser = json['id_user'];
     name = json['name'];
@@ -31,6 +34,7 @@ class MDMessage {
     data['id'] = this.id;
     data['content'] = this.content;
     data['image'] = this.image;
+    data['time'] = this.time;
     data['id_group'] = this.idGroup;
     data['id_user'] = this.idUser;
     data['name'] = this.name;

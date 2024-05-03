@@ -123,7 +123,6 @@ class HomeScreen extends StatelessWidget {
                                   const EdgeInsets.symmetric(horizontal: 20),
                               child: RefreshIndicator(
                                 onRefresh: () async {
-                                  
                                   controller.refressGroup();
                                 },
                                 child: ListView.builder(
@@ -131,7 +130,7 @@ class HomeScreen extends StatelessWidget {
                                   itemCount: controller.listGroup.length,
                                   itemBuilder: (context, index) {
                                     return groupChat(
-                                        controller.listGroup[index]);
+                                        controller.listGroup[index], index);
                                   },
                                 ),
                               ),
@@ -191,7 +190,7 @@ class HomeScreen extends StatelessWidget {
         ));
   }
 
-  Widget groupChat(MDGroup group) {
+  Widget groupChat(MDGroup group, int index) {
     return GestureDetector(
       onTap: () {
         if (Get.isRegistered<MessageGroupController>()) {
@@ -200,7 +199,7 @@ class HomeScreen extends StatelessWidget {
         Navigation.navigateTo(page: 'MessageGroup', arguments: group);
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 10),
+        margin: const EdgeInsets.only(bottom: 10),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
@@ -228,15 +227,16 @@ class HomeScreen extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 3,
           ),
           Expanded(
             child: Container(
+              height: 50,
               decoration: BoxDecoration(
                   color: UtilColor.buttonGrey,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                  borderRadius: const BorderRadius.all(Radius.circular(10))),
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
               width: size.width,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -248,15 +248,56 @@ class HomeScreen extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: UtilColor.textBase),
+                        color: UtilColor.textPurple),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 6,
                   ),
+                  controller.messageList.isNotEmpty
+                      ? Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '${controller.messageList[index].name}: ',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: UtilColor.textBase),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        '${controller.messageList[index].content}',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: UtilColor.textBase),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                controller.convertDateTimeFormat(controller
+                                    .messageList[index].time
+                                    .toString()),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: UtilColor.textGrey),
+                              )
+                            ],
+                          ),
+                        )
+                      : Container()
                 ],
               ),
             ),
-          )
+          ),
         ]),
       ),
     );
@@ -266,7 +307,7 @@ class HomeScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {},
       child: Container(
-        margin: EdgeInsets.only(bottom: 10),
+        margin: const EdgeInsets.only(bottom: 10),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           ClipOval(
             child: Image.network(
@@ -293,15 +334,15 @@ class HomeScreen extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 3,
           ),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
                   color: UtilColor.buttonGrey,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                  borderRadius: const BorderRadius.all(Radius.circular(10))),
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
               width: size.width,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
