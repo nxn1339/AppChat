@@ -22,6 +22,7 @@ class CreateGroup extends StatelessWidget {
           GestureDetector(
             onTap: () {
               controller.createGroup();
+              LoadingDialog.showLoadingDialog(context);
             },
             child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -126,6 +127,28 @@ class CreateGroup extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class LoadingDialog {
+  static void showLoadingDialog(BuildContext context,
+      {String message = 'Loading...'}) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text(message),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:chat_app/Model/MDGroup.dart';
+import 'package:chat_app/Model/MDMember.dart';
 import 'package:chat_app/Model/MDMessage.dart';
 import 'package:chat_app/Service/APICaller.dart';
 import 'package:chat_app/Service/SocketIO.dart';
@@ -10,13 +11,57 @@ class HomeController extends GetxController {
   RxList<MDGroup> listGroup = RxList<MDGroup>();
   RxList<MDMessage> messageList = RxList<MDMessage>();
   String uuid = '';
+  RxList<MDMember> listStatusMessage = RxList<MDMember>();
+  MDMember memberNew = new MDMember();
+  MDMessage messageNew = new MDMessage();
+  bool isLoadingGroup = false;
+  bool isLoadingStatus = false;
+  bool isLoadingLastChat = false;
+  RxBool isLoading = true.obs;
 
   @override
   void onInit() async {
     super.onInit();
     await loadSavedText();
     await fecthGroup();
-    fecthLastChat();
+    await fecthLastChat();
+    await fecthStatusMessage();
+    await checkLoading();
+
+    SocketIOCaller.getInstance().socket?.on('readMessage', (data) {
+      if (listStatusMessage.isNotEmpty) {
+        memberNew = MDMember.fromJson(data);
+        if (memberNew.readMessage == 1) {
+          for (int i = 0; i < listStatusMessage.length; i++) {
+            if (listStatusMessage[i].idGroup == memberNew.idGroup &&
+                listStatusMessage[i].idUser != memberNew.idUser) {
+              listStatusMessage[i].readMessage = memberNew.readMessage;
+              listStatusMessage.refresh();
+            }
+          }
+        } else {
+          for (int i = 0; i < listStatusMessage.length; i++) {
+            if (listStatusMessage[i].idGroup == memberNew.idGroup &&
+                listStatusMessage[i].idUser == memberNew.idUser) {
+              listStatusMessage[i].readMessage = memberNew.readMessage;
+              listStatusMessage.refresh();
+            }
+          }
+        }
+      } else {
+        listStatusMessage.add(MDMember.fromJson(data));
+      }
+    });
+    SocketIOCaller.getInstance().socket?.on('chat message', (data) {
+      messageNew = MDMessage.fromJson(data);
+      print(messageNew.content);
+      for (int i = 0; i < messageList.length; i++) {
+        if (messageList[i].idGroup == messageNew.idGroup) {
+          messageList[i] = messageNew;
+          messageList.refresh();
+        }
+      }
+    });
   }
 
   loadSavedText() async {
@@ -26,7 +71,38 @@ class HomeController extends GetxController {
     }
   }
 
+  checkLoading() {
+    isLoading.value = true;
+    if (isLoadingGroup == false &&
+        isLoadingLastChat == false &&
+        isLoadingStatus == false) {
+      isLoading.value = false;
+    }
+  }
+
+  fecthStatusMessage() async {
+    isLoadingStatus = true;
+    try {
+      for (var i = 0; i < listGroup.length; i++) {
+        var response =
+            await APICaller.getInstance().get('group/$uuid/${listGroup[i].id}');
+        if (response != null) {
+          print(response);
+          List<dynamic> list = response['data'];
+          var listItem =
+              list.map((dynamic json) => MDMember.fromJson(json)).toList();
+          listStatusMessage.addAll(listItem);
+          listStatusMessage.refresh();
+          isLoadingStatus = false;
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   fecthGroup() async {
+    isLoadingGroup = true;
     try {
       var response = await APICaller.getInstance().get('group/$uuid');
       if (response != null) {
@@ -35,13 +111,15 @@ class HomeController extends GetxController {
             list.map((dynamic json) => MDGroup.fromJson(json)).toList();
         listGroup.addAll(listItem);
         listGroup.refresh();
+        isLoadingGroup = false;
       }
     } catch (e) {
       print(e);
     }
   }
 
-  void fecthLastChat() async {
+  fecthLastChat() async {
+    isLoadingLastChat = true;
     try {
       for (var i = 0; i < listGroup.length; i++) {
         var response =
@@ -52,7 +130,24 @@ class HomeController extends GetxController {
               list.map((dynamic json) => MDMessage.fromJson(json)).toList();
           messageList.addAll(listItem);
           messageList.refresh();
+          isLoadingLastChat = false;
         }
+      }
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
+  void updateStatus(String idGroup) async {
+    var body = {"id_group": idGroup, "id_user": uuid};
+    try {
+      var response = await APICaller.getInstance().put('group', body);
+      if (response != null) {
+        SocketIOCaller.getInstance().socket?.emit('readMessage', {
+          'id_group': idGroup,
+          'id_user': uuid,
+          'read_message': 0,
+        });
       }
     } catch (e) {
       print(e);
@@ -85,9 +180,20 @@ class HomeController extends GetxController {
   }
 
   void refressGroup() async {
-    listGroup.clear();
+    isLoading.value = true;
+    if (listGroup.isNotEmpty) {
+      listGroup.clear();
+    }
     await fecthGroup();
-    messageList.clear();
-    fecthLastChat();
+    if (messageList.isNotEmpty) {
+      messageList.clear();
+    }
+    await fecthLastChat();
+    if (listStatusMessage.isNotEmpty) {
+      listStatusMessage.clear();
+    }
+    await fecthStatusMessage();
+
+    await checkLoading();
   }
 }

@@ -88,7 +88,7 @@ class MessageGroup extends StatelessWidget {
                 itemCount: controller.messageList.length,
                 itemBuilder: (context, index) {
                   if (controller.messageList[index].content != "") {
-                    if (controller.uuid.value ==
+                    if (controller.uuid.value !=
                         controller.messageList[index].idUser) {
                       return Align(
                         alignment: Alignment.centerLeft,
@@ -248,7 +248,8 @@ class MessageGroup extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () {
-                    _sendMessage(controller.textEditingMessage.text);
+                    _sendMessage(controller.textEditingMessage.text,
+                        controller.group.value.id.toString());
                     controller.scrollChat();
                   },
                 ),
@@ -261,7 +262,7 @@ class MessageGroup extends StatelessWidget {
   }
 }
 
-void _sendMessage(String content) async {
+void _sendMessage(String content, String idGroup) async {
   var idUser = await Utils.getStringValueWithKey('id');
   var avatar = await Utils.getStringValueWithKey('avatar');
   var name = await Utils.getStringValueWithKey('name');
@@ -274,6 +275,12 @@ void _sendMessage(String content) async {
       'image': '',
       'name': name,
       'id_group': Get.arguments.id,
+    });
+
+    SocketIOCaller.getInstance().socket?.emit('readMessage', {
+      'id_group': idGroup,
+      'id_user': idUser,
+      'read_message': 1,
     });
   }
 }

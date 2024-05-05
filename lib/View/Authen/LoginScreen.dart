@@ -1,6 +1,7 @@
 import 'package:chat_app/Controller/LoginController.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:chat_app/Utils/Utils.dart';
+import 'package:chat_app/View/Group/CreateGroup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -91,6 +92,7 @@ class LoginScreen extends StatelessWidget {
               GestureDetector(
                   onTap: () {
                     controller.login();
+                    LoadingDialog.showLoadingDialog(context);
                   },
                   child: Utils.buttonBlack(context, 'Đăng nhập')),
             ],

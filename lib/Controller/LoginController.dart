@@ -14,7 +14,7 @@ class LoginController extends GetxController {
   }
 
   //hàm login
-  void login() async {
+  login() async {
     var body = {
       "username": textEditUserName.text,
       "password": textEditPassword.text
@@ -22,10 +22,12 @@ class LoginController extends GetxController {
     try {
       var response = await APICaller.getInstance().post('user/login', body);
       if (response != null) {
-        Navigation.navigateTo(page: 'HomeScreen');
-        saveUser(response);
-        Utils.showSnackBar(
-            title: "Thông báo", message: "Đăng nhập thành công !");
+        Future.delayed(Duration(seconds: 2), () {
+          Navigation.navigateTo(page: 'HomeScreen');
+          saveUser(response);
+          Utils.showSnackBar(
+              title: "Thông báo", message: "Đăng nhập thành công !");
+        });
       } else {
         Utils.showSnackBar(title: 'Thông báo', message: response['message']);
       }

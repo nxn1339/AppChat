@@ -12,6 +12,7 @@ class CreateGroupController extends GetxController {
   List<String> listIDUserInGroup = [];
   TextEditingController textEditNameGroup = TextEditingController();
   String uuid = '';
+  RxBool isLoading = false.obs;
   @override
   void onInit() {
     super.onInit();
@@ -71,6 +72,7 @@ class CreateGroupController extends GetxController {
   }
 
   Future<void> createGroup() async {
+    isLoading.value = true;
     try {
       var body = {
         "name": textEditNameGroup.text,
@@ -87,9 +89,12 @@ class CreateGroupController extends GetxController {
           var homeController = Get.find<HomeController>();
           homeController.refressGroup();
         }
-        Get.back();
-        Utils.showSnackBar(
-            title: "Thông báo", message: 'Thêm thành công Group');
+        Future.delayed(Duration(seconds: 2), () {
+          Get.close(2);
+          Utils.showSnackBar(
+              title: "Thông báo", message: 'Thêm thành công Group');
+          isLoading.value = false;
+        });
       }
     } catch (e) {
       Utils.showSnackBar(title: "Thông báo", message: 'Có lỗi xảy ra !');
