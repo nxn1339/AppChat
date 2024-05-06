@@ -3,6 +3,7 @@ import 'package:chat_app/Controller/MessageGroupController.dart';
 import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
+import 'package:chat_app/Utils/UtilLink.dart';
 import 'package:chat_app/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -210,14 +211,14 @@ class HomeScreen extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                '${group.image}',
-                height: 50,
-                width: 50,
+                '${UtilLink.BASE_URL}${group.image}',
+                height: 60,
+                width: 60,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                      height: 50,
-                      width: 50,
+                      height: 60,
+                      width: 60,
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 6),
                       color: UtilColor.buttonBlue,
@@ -238,7 +239,7 @@ class HomeScreen extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                height: 50,
+                height: 60,
                 decoration: BoxDecoration(
                     color: UtilColor.buttonGrey,
                     borderRadius: const BorderRadius.all(Radius.circular(10))),

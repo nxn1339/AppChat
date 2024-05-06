@@ -47,6 +47,7 @@ dependencies:
   flutter_html: ^3.0.0-alpha.3
   shared_preferences: ^2.0.8
   image_picker: ^1.0.4
+  awesome_notifications: ^0.8.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

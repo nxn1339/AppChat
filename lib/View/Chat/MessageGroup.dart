@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:chat_app/Controller/MessageGroupController.dart';
 import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Service/SocketIO.dart';
@@ -250,6 +251,7 @@ class MessageGroup extends StatelessWidget {
                   onPressed: () {
                     _sendMessage(controller.textEditingMessage.text,
                         controller.group.value.id.toString());
+                        AwesomeNotifications().createNotification(content: NotificationContent(id:10, channelKey: 'Key',title: 'Đã gửi tin nhắn mới',body: 'TEST'));
                     controller.scrollChat();
                   },
                 ),
@@ -282,5 +284,8 @@ void _sendMessage(String content, String idGroup) async {
       'id_user': idUser,
       'read_message': 1,
     });
+
   }
+
+
 }

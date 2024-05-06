@@ -1,12 +1,28 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Splash extends StatelessWidget {
-  Splash({super.key});
+class Splash extends StatefulWidget {
+  const Splash({super.key});
 
   @override
+  State<Splash> createState() => _SplashState();
+}
+
+class _SplashState extends State<Splash> {
+  @override
+  void initState(){
+    super.initState();
+    AwesomeNotifications().isNotificationAllowed().then((value) => {
+      if(!value){
+        AwesomeNotifications().requestPermissionToSendNotifications()
+      }
+    });
+  }
+
+ @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -112,4 +128,7 @@ class Splash extends StatelessWidget {
       ),
     );
   }
+
 }
+
+
