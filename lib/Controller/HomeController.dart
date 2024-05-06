@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Model/MDMember.dart';
 import 'package:chat_app/Model/MDMessage.dart';
@@ -28,6 +29,17 @@ class HomeController extends GetxController {
     await fecthStatusMessage();
     await checkLoading();
 
+    SocketIOCaller.getInstance().socket?.on('chat message', (data) {
+      messageNew = MDMessage.fromJson(data);
+      print(messageNew.content);
+      for (int i = 0; i < messageList.length; i++) {
+        if (messageList[i].idGroup == messageNew.idGroup) {
+          messageList[i] = messageNew;
+          messageList.refresh();
+        }
+      }
+    });
+
     SocketIOCaller.getInstance().socket?.on('readMessage', (data) {
       if (listStatusMessage.isNotEmpty) {
         memberNew = MDMember.fromJson(data);
@@ -37,6 +49,19 @@ class HomeController extends GetxController {
                 listStatusMessage[i].idUser != memberNew.idUser) {
               listStatusMessage[i].readMessage = memberNew.readMessage;
               listStatusMessage.refresh();
+              String content = '';
+              if (messageNew.content!.isEmpty) {
+                content = 'Ảnh mới';
+              } else {
+                content = messageNew.content.toString();
+              }
+              AwesomeNotifications().createNotification(
+                  content: NotificationContent(
+                id: 1,
+                channelKey: 'Key',
+                title: '${messageNew.name} Đã gửi tin nhắn mới',
+                body: content,
+              ));
             }
           }
         } else {
@@ -50,16 +75,6 @@ class HomeController extends GetxController {
         }
       } else {
         listStatusMessage.add(MDMember.fromJson(data));
-      }
-    });
-    SocketIOCaller.getInstance().socket?.on('chat message', (data) {
-      messageNew = MDMessage.fromJson(data);
-      print(messageNew.content);
-      for (int i = 0; i < messageList.length; i++) {
-        if (messageList[i].idGroup == messageNew.idGroup) {
-          messageList[i] = messageNew;
-          messageList.refresh();
-        }
       }
     });
   }

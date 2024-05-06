@@ -77,38 +77,46 @@ class MessageGroupDetail extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            GestureDetector(
-              onTap: () {
-                Navigation.navigateTo(
-                    page: 'AddMemberGroup', arguments: controller.group);
-              },
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: UtilColor.buttonBlack,
-                      borderRadius: BorderRadius.all(Radius.circular(50))),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.person_add_alt_1_rounded,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Thêm thành viên',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
-                      ),
-                    ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigation.navigateTo(
+                        page: 'AddMemberGroup', arguments: controller.group);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: UtilColor.buttonBlack,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(50))),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 14),
+                    child: const Icon(
+                      Icons.person_add_alt_1_rounded,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(
+                  width: 10,
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: UtilColor.buttonBlack,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(50))),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 14),
+                    child: const Icon(
+                      Icons.add_a_photo,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 10,

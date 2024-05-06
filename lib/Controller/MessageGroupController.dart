@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Model/MDMessage.dart';
 import 'package:chat_app/Service/APICaller.dart';
@@ -14,6 +16,8 @@ class MessageGroupController extends GetxController {
   RxString uuid = "".obs;
   ScrollController scrollController = ScrollController();
   Rx<MDGroup> group = new MDGroup().obs;
+  RxList<File> imageFile = RxList<File>();
+  String linkImage = '';
   @override
   void onInit() async {
     super.onInit();
@@ -53,7 +57,7 @@ class MessageGroupController extends GetxController {
   void sendChat() async {
     var body = {
       "content": textEditingMessage.text,
-      "image": "",
+      "image": linkImage,
       "id_group": Get.arguments.id,
       "id_user": await Utils.getStringValueWithKey('id')
     };
@@ -95,5 +99,33 @@ class MessageGroupController extends GetxController {
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
+  }
+
+  postImage() async {
+    if (imageFile.isNotEmpty) {
+      try {
+        var response = await APICaller.getInstance()
+            .postFile('image/single', imageFile.first);
+        if (response != null) {
+          linkImage = response['image'];
+        }
+      } catch (e) {
+        Utils.showSnackBar(title: 'Thông báo', message: 'Lỗi ảnh');
+      }
+    }
+  }
+
+  void getImage(int source) async {
+    if (imageFile.isNotEmpty) {
+      imageFile.clear();
+    }
+    List<File> file = await Utils.getImagePicker(source, false);
+    imageFile.addAll(file);
+  }
+
+  void clearImage() {
+    if (imageFile.isNotEmpty) {
+      imageFile.clear();
+    }
   }
 }
