@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:chat_app/Controller/HomeController.dart';
 import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Model/MDUser.dart';
 import 'package:chat_app/Service/APICaller.dart';
 import 'package:chat_app/Utils/Utils.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 
@@ -11,6 +14,10 @@ class MessageGroupDetailController extends GetxController {
   RxList<MDUser> listUser = RxList<MDUser>();
   String uuid = '';
   RxBool isOwenGroup = false.obs;
+  RxList<File> imageFile = RxList<File>();
+  String linkImage = '';
+  TextEditingController textEditNameGroup = TextEditingController();
+
   @override
   void onInit() async {
     super.onInit();
@@ -23,6 +30,7 @@ class MessageGroupDetailController extends GetxController {
     } else {
       isOwenGroup.value = false;
     }
+    textEditNameGroup.text = group.value.name.toString();
   }
 
   loadSavedText() async {
@@ -92,5 +100,49 @@ class MessageGroupDetailController extends GetxController {
     } catch (e) {
       Utils.showSnackBar(title: 'Thông báo', message: '$e');
     }
+  }
+
+  void updateGroup() async {
+    await postImage();
+    var body = {
+      "id": group.value.id,
+      "name": textEditNameGroup.text,
+      "image": linkImage,
+      "id_user": group.value.owner
+    };
+    print(body);
+    try {
+      var response = await APICaller.getInstance().put('group/Change', body);
+      if (response != null) {
+        if (Get.isRegistered<HomeController>()) {
+          Get.find<HomeController>().refressGroup();
+        }
+        Get.close(2);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  postImage() async {
+    if (imageFile.isNotEmpty) {
+      try {
+        var response = await APICaller.getInstance()
+            .postFile('image/single', imageFile.first);
+        if (response != null) {
+          linkImage = response['image'];
+        }
+      } catch (e) {
+        Utils.showSnackBar(title: 'Thông báo', message: 'Lỗi ảnh');
+      }
+    }
+  }
+
+  void getImage(int source) async {
+    if (imageFile.isNotEmpty) {
+      imageFile.clear();
+    }
+    List<File> file = await Utils.getImagePicker(source, false);
+    imageFile.addAll(file);
   }
 }

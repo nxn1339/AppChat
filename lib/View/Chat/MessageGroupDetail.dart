@@ -102,7 +102,9 @@ class MessageGroupDetail extends StatelessWidget {
                   width: 10,
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    controller.getImage(0);
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                         color: UtilColor.buttonBlack,
@@ -111,13 +113,80 @@ class MessageGroupDetail extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 14),
                     child: const Icon(
-                      Icons.add_a_photo,
+                      Icons.add_photo_alternate,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    controller.updateGroup();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: UtilColor.buttonBlack,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(50))),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 14),
+                    child: const Icon(
+                      Icons.save,
                       color: Colors.white,
                     ),
                   ),
                 ),
               ],
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            Obx(
+              () => Center(
+                child: ClipOval(
+                    child: controller.imageFile.isEmpty
+                        ? Image.network(
+                            '${UtilLink.BASE_URL}${controller.group.value.image}',
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 100,
+                                width: 100,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 6),
+                                color: UtilColor.buttonBlue,
+                              );
+                            },
+                          )
+                        : Image.file(
+                            controller.imageFile.first,
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 100,
+                                width: 100,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 6),
+                                color: UtilColor.buttonBlue,
+                              );
+                            },
+                          )),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Utils.textField(
+                icon: const Icon(Icons.group),
+                hintText: 'Tên nhóm....',
+                maxLines: 1,
+                controller: controller.textEditNameGroup),
             const SizedBox(
               height: 10,
             ),

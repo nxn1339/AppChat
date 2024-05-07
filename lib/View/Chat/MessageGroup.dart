@@ -31,7 +31,7 @@ class MessageGroup extends StatelessWidget {
               children: [
                 ClipOval(
                   child: Image.network(
-                    '${controller.group.value.image}',
+                    '${UtilLink.BASE_URL}${controller.group.value.image}',
                     height: 40,
                     width: 40,
                     fit: BoxFit.cover,
