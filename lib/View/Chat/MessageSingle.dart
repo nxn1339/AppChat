@@ -1,5 +1,4 @@
-import 'package:chat_app/Controller/MessageGroupController.dart';
-import 'package:chat_app/Navigation/Navigation.dart';
+import 'package:chat_app/Controller/MessageSingleController.dart';
 import 'package:chat_app/Service/SocketIO.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:chat_app/Utils/UtilLink.dart';
@@ -7,14 +6,11 @@ import 'package:chat_app/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MessageGroup extends StatelessWidget {
-  MessageGroup({super.key});
-  var controller = Get.put(MessageGroupController());
-  Size size = Size(0, 0);
-
+class MessageSingle extends StatelessWidget {
+  MessageSingle({super.key});
+  var controller = Get.put(MessageSingleController());
   @override
   Widget build(BuildContext context) {
-    size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -22,10 +18,7 @@ class MessageGroup extends StatelessWidget {
         foregroundColor: UtilColor.textBase,
         elevation: 0.5,
         title: GestureDetector(
-          onTap: () {
-            Navigation.navigateTo(
-                page: 'MessageGroupDetail', arguments: controller.group);
-          },
+          onTap: () {},
           child: Obx(
             () => Column(
               children: [
@@ -415,7 +408,7 @@ class MessageGroup extends StatelessWidget {
                               controller.group.value.id.toString(),
                               controller.linkImage);
                           controller.clearImage();
-                          
+
                           controller.scrollChat();
                         },
                       ),
@@ -466,27 +459,27 @@ class MessageGroup extends StatelessWidget {
       ),
     );
   }
-}
 
-sendMessage(String content, String idGroup, String image) async {
-  var idUser = await Utils.getStringValueWithKey('id');
-  var avatar = await Utils.getStringValueWithKey('avatar');
-  var name = await Utils.getStringValueWithKey('name');
-  if (content.isNotEmpty || image.isNotEmpty) {
-    SocketIOCaller.getInstance().socket?.emit('chat message', {
-      'id_user': idUser,
-      'time': DateTime.now().toIso8601String(),
-      'content': content,
-      'avatar': avatar,
-      'image': image,
-      'name': name,
-      'id_group': Get.arguments.id,
-    });
+  sendMessage(String content, String idGroup, String image) async {
+    var idUser = await Utils.getStringValueWithKey('id');
+    var avatar = await Utils.getStringValueWithKey('avatar');
+    var name = await Utils.getStringValueWithKey('name');
+    if (content.isNotEmpty || image.isNotEmpty) {
+      SocketIOCaller.getInstance().socket?.emit('chat message', {
+        'id_user': idUser,
+        'time': DateTime.now().toIso8601String(),
+        'content': content,
+        'avatar': avatar,
+        'image': image,
+        'name': name,
+        'id_group': Get.arguments.id,
+      });
 
-    SocketIOCaller.getInstance().socket?.emit('readMessage', {
-      'id_group': idGroup,
-      'id_user': idUser,
-      'read_message': 1,
-    });
+      SocketIOCaller.getInstance().socket?.emit('readMessage', {
+        'id_group': idGroup,
+        'id_user': idUser,
+        'read_message': 1,
+      });
+    }
   }
 }

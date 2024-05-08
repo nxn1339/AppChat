@@ -19,6 +19,8 @@ class HomeController extends GetxController {
   bool isLoadingStatus = false;
   bool isLoadingLastChat = false;
   RxBool isLoading = true.obs;
+  RxString avatar = ''.obs;
+  RxString name = ''.obs;
 
   @override
   void onInit() async {
@@ -83,6 +85,14 @@ class HomeController extends GetxController {
     if (await Utils.getStringValueWithKey('id') != '' ||
         await Utils.getStringValueWithKey('id') != null) {
       uuid = await Utils.getStringValueWithKey('id');
+    }
+    if (await Utils.getStringValueWithKey('id') != '' ||
+        await Utils.getStringValueWithKey('id') != null) {
+      avatar.value = await Utils.getStringValueWithKey('avatar');
+    }
+    if (await Utils.getStringValueWithKey('id') != '' ||
+        await Utils.getStringValueWithKey('id') != null) {
+      name.value = await Utils.getStringValueWithKey('name');
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:chat_app/Controller/HomeController.dart';
 import 'package:chat_app/Controller/MessageGroupController.dart';
+import 'package:chat_app/Controller/MessageSingleController.dart';
 import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
@@ -19,23 +20,17 @@ class HomeScreen extends StatelessWidget {
     size = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(
+          title: Text('Màn hình chính'),
+          backgroundColor: Colors.white,
+          foregroundColor: UtilColor.buttonBlack,
+          elevation: 0.5),
+      drawer: NavigationDrawer(),
       body: DefaultTabController(
         length: 2, // Số lượng tab
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 50,
-            ),
-            Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                  'Màn hình chính',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: UtilColor.textBase),
-                )),
             const SizedBox(
               height: 10,
             ),
@@ -339,7 +334,13 @@ class HomeScreen extends StatelessWidget {
 
   Widget singleChat(MDGroup group) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (Get.isRegistered<MessageSingleController>()) {
+          Get.find<MessageSingleController>().createStart();
+        }
+        controller.updateStatus(group.id.toString());
+        Navigation.navigateTo(page: 'MessageSingle', arguments: group);
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -397,6 +398,120 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           )
+        ]),
+      ),
+    );
+  }
+}
+
+class NavigationDrawer extends StatelessWidget {
+  NavigationDrawer({super.key});
+  var controller = Get.find<HomeController>();
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Obx(
+        () => Column(children: [
+          const SizedBox(
+            height: 50,
+          ),
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(50)),
+            child: Image.network(
+              '${UtilLink.BASE_URL}${controller.avatar.value}',
+              height: 100,
+              width: 100,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                    height: 100,
+                    width: 100,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
+                    color: UtilColor.buttonBlue,
+                    child: Center(
+                      child: Text(
+                        controller.name.isEmpty
+                            ? 'A'
+                            : controller.name.value[0],
+                        style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ));
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            controller.name.value,
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                color: UtilColor.textBase),
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          Wrap(
+            children: [
+              ListTile(
+                leading: Icon(Icons.person),
+                title: Text(
+                  'Cá nhân',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: UtilColor.textBase),
+                ),
+                onTap: () {
+                  // Handle onTap event
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.lock),
+                title: Text(
+                  'Đổi mật khẩu',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: UtilColor.textBase),
+                ),
+                onTap: () {
+                  // Handle onTap event
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.settings_rounded),
+                title: Text(
+                  'Cài đặt',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: UtilColor.textBase),
+                ),
+                onTap: () {
+                  // Handle onTap event
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.logout),
+                title: Text(
+                  'Đăng Xuất',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: UtilColor.textBase),
+                ),
+                onTap: () {
+                  // Handle onTap event
+                },
+              ),
+            ],
+          ),
         ]),
       ),
     );

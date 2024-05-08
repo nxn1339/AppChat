@@ -1,6 +1,7 @@
 import 'package:chat_app/View/Chat/AddMemberGroup.dart';
 import 'package:chat_app/View/Chat/MessageGroup.dart';
 import 'package:chat_app/View/Chat/MessageGroupDetail.dart';
+import 'package:chat_app/View/Chat/MessageSingle.dart';
 import 'package:chat_app/View/Group/CreateGroup.dart';
 import 'package:chat_app/View/Home/HomeScreen.dart';
 import 'package:chat_app/View/Authen/LoginScreen.dart';
@@ -20,6 +21,8 @@ class RouteDefine {
         return MessageGroupDetail();
       case 'AddMemberGroup':
         return AddMemberGroup();
+      case 'MessageSingle':
+        return MessageSingle();
     }
   }
 }

@@ -4,13 +4,12 @@ import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Model/MDMessage.dart';
 import 'package:chat_app/Service/APICaller.dart';
 import 'package:chat_app/Service/SocketIO.dart';
-import 'package:chat_app/Utils/UtilLink.dart';
 import 'package:chat_app/Utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class MessageGroupController extends GetxController {
+class MessageSingleController extends GetxController{
   TextEditingController textEditingMessage = TextEditingController();
   RxList<MDMessage> messageList = RxList<MDMessage>();
   RxString uuid = "".obs;
