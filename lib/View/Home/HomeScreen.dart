@@ -468,7 +468,7 @@ class NavigationDrawer extends StatelessWidget {
                       color: UtilColor.textBase),
                 ),
                 onTap: () {
-                  // Handle onTap event
+                  Navigation.navigateTo(page: 'ProfileScreen');
                 },
               ),
               ListTile(
