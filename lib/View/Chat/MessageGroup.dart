@@ -128,20 +128,71 @@ class MessageGroup extends StatelessWidget {
                                             controller.messageList[index]
                                                         .image !=
                                                     ''
-                                                ? Image.network(
-                                                    '${UtilLink.BASE_URL}${controller.messageList[index].image}',
-                                                    height: 60,
-                                                    width: 60,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder: (context,
-                                                        error, stackTrace) {
-                                                      return Container(
-                                                        height: 60,
-                                                        width: 60,
-                                                        color: Colors.amber,
-                                                        child: Text('Error'),
-                                                      );
+                                                ? GestureDetector(
+                                                    onTap: () {
+                                                      controller.downloadFile(
+                                                          controller
+                                                                  .messageList[
+                                                                      index]
+                                                                  .image ??
+                                                              '');
                                                     },
+                                                    child: controller.isImageLink(
+                                                                controller
+                                                                    .messageList[
+                                                                        index]
+                                                                    .image
+                                                                    .toString()) !=
+                                                            true
+                                                        ? Container(
+                                                            decoration: BoxDecoration(
+                                                                color: UtilColor
+                                                                    .buttonBlack,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        4),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        10,
+                                                                    horizontal:
+                                                                        10),
+                                                            child: Text(
+                                                                'File .${controller.getFileExtension(controller.messageList[index].image.toString())}',
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: Colors
+                                                                        .white)),
+                                                          )
+                                                        : Image.network(
+                                                            '${UtilLink.BASE_URL}${controller.messageList[index].image}',
+                                                            height: 60,
+                                                            width: 60,
+                                                            fit: BoxFit.cover,
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return Container(
+                                                                height: 60,
+                                                                width: 60,
+                                                                color: Colors
+                                                                    .amber,
+                                                                child: Text(
+                                                                    'Error'),
+                                                              );
+                                                            },
+                                                          ),
                                                   )
                                                 : Container(),
                                             Container(
@@ -229,20 +280,71 @@ class MessageGroup extends StatelessWidget {
                                               ? Container(
                                                   margin: const EdgeInsets.only(
                                                       left: 3, right: 3),
-                                                  child: Image.network(
-                                                    '${UtilLink.BASE_URL}${controller.messageList[index].image}',
-                                                    height: 60,
-                                                    width: 60,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder: (context,
-                                                        error, stackTrace) {
-                                                      return Container(
-                                                        height: 60,
-                                                        width: 60,
-                                                        color: Colors.amber,
-                                                        child: Text('Error'),
-                                                      );
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      controller.downloadFile(
+                                                          controller
+                                                                  .messageList[
+                                                                      index]
+                                                                  .image ??
+                                                              '');
                                                     },
+                                                    child: controller.isImageLink(
+                                                                controller
+                                                                    .messageList[
+                                                                        index]
+                                                                    .image
+                                                                    .toString()) !=
+                                                            true
+                                                        ? Container(
+                                                            decoration: BoxDecoration(
+                                                                color: UtilColor
+                                                                    .buttonBlack,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        4),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        10,
+                                                                    horizontal:
+                                                                        10),
+                                                            child: Text(
+                                                                'File .${controller.getFileExtension(controller.messageList[index].image.toString())}',
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: Colors
+                                                                        .white)),
+                                                          )
+                                                        : Image.network(
+                                                            '${UtilLink.BASE_URL}${controller.messageList[index].image}',
+                                                            height: 60,
+                                                            width: 60,
+                                                            fit: BoxFit.cover,
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return Container(
+                                                                height: 60,
+                                                                width: 60,
+                                                                color: Colors
+                                                                    .amber,
+                                                                child: Text(
+                                                                    'Error'),
+                                                              );
+                                                            },
+                                                          ),
                                                   ),
                                                 )
                                               : Container(),
@@ -337,20 +439,41 @@ class MessageGroup extends StatelessWidget {
                             height: 10,
                           ),
                           controller.messageList[index].image != ''
-                              ? Image.network(
-                                  '${UtilLink.BASE_URL}${controller.messageList[index].image}',
-                                  height: 60,
-                                  width: 60,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
+                              ? controller.isImageLink(controller
+                                          .messageList[index].image
+                                          .toString()) !=
+                                      true
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                          color: UtilColor.buttonBlack,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 4),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 10),
+                                      child: Text(
+                                          'File .${controller.getFileExtension(controller.messageList[index].image.toString())}',
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white)),
+                                    )
+                                  : Image.network(
+                                      '${UtilLink.BASE_URL}${controller.messageList[index].image}',
                                       height: 60,
                                       width: 60,
-                                      color: Colors.amber,
-                                      child: Text('Error'),
-                                    );
-                                  },
-                                )
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Container(
+                                          height: 60,
+                                          width: 60,
+                                          color: Colors.amber,
+                                          child: Text('Error'),
+                                        );
+                                      },
+                                    )
                               : Container(),
                           controller.messageList[index].content!.isNotEmpty
                               ? Align(
@@ -415,7 +538,7 @@ class MessageGroup extends StatelessWidget {
                               controller.group.value.id.toString(),
                               controller.linkImage);
                           controller.clearImage();
-                          
+
                           controller.scrollChat();
                         },
                       ),
@@ -440,8 +563,15 @@ class MessageGroup extends StatelessWidget {
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return Container(
+                                    decoration: BoxDecoration(
+                                        color: UtilColor.buttonLightBlue,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border:
+                                            Border.all(color: Colors.black)),
                                     height: 80,
                                     width: 80,
+                                    child:
+                                        const Center(child: Text('File mới')),
                                   );
                                 },
                               ),

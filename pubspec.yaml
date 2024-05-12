@@ -48,6 +48,7 @@ dependencies:
   shared_preferences: ^2.0.8
   image_picker: ^1.0.4
   awesome_notifications: ^0.8.2
+  file_picker: ^7.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

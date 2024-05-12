@@ -53,7 +53,7 @@ class HomeController extends GetxController {
               listStatusMessage.refresh();
               String content = '';
               if (messageNew.content!.isEmpty) {
-                content = 'Ảnh mới';
+                content = 'file mới';
               } else {
                 content = messageNew.content.toString();
               }
