@@ -3,6 +3,7 @@ import 'package:chat_app/Controller/LoginController.dart';
 import 'package:chat_app/Model/MDUser.dart';
 import 'package:chat_app/Service/APICaller.dart';
 import 'package:chat_app/Utils/Utils.dart';
+import 'package:chat_app/View/Group/CreateGroup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -46,7 +47,7 @@ class CreateGroupController extends GetxController {
             list.map((dynamic json) => MDUser.fromJson(json)).toList();
         listUser.addAll(listItem);
         listUser.refresh();
-        listUser.removeWhere((element) => element.id == uuid);
+        // listUser.removeWhere((element) => element.id == uuid);
         listIDUser = RxList.generate(listUser.length, (index) => '');
       }
     } catch (e) {
@@ -71,13 +72,20 @@ class CreateGroupController extends GetxController {
     }
   }
 
-  Future<void> createGroup() async {
+  Future<void> createGroup(BuildContext context) async {
+    if (textEditNameGroup.text.trim().isEmpty) {
+      Utils.showSnackBar(
+          title: 'Lỗi', message: 'Tên nhóm không được để trống !');
+      return;
+    }
+    LoadingDialog.showLoadingDialog(context);
     isLoading.value = true;
     try {
       var body = {
         "name": textEditNameGroup.text,
         "image": "",
         "id_user": uuid,
+        "type": 0
       };
 
       var response = await APICaller.getInstance().post('group', body);

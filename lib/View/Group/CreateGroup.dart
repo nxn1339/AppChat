@@ -21,8 +21,7 @@ class CreateGroup extends StatelessWidget {
         actions: [
           GestureDetector(
             onTap: () {
-              controller.createGroup();
-              LoadingDialog.showLoadingDialog(context);
+              controller.createGroup(context);
             },
             child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -63,63 +62,69 @@ class CreateGroup extends StatelessWidget {
                       child: ListView.builder(
                         itemCount: controller.listUser.length,
                         itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              controller.addMember(
-                                  controller.listUser[index].id ?? '', index);
-                            },
-                            child: Container(
-                              color: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      ClipOval(
-                                        child: Image.network(
-                                          '${UtilLink.BASE_URL}${controller.listUser[index].avatar}',
-                                          height: 40,
-                                          width: 40,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Container(
-                                              height: 40,
-                                              width: 40,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 5,
-                                                      horizontal: 6),
-                                              color: UtilColor.buttonBlue,
-                                            );
-                                          },
+                          if (controller.listUser[index].id ==
+                              controller.uuid) {
+                            return Container();
+                          } else {
+                            return GestureDetector(
+                              onTap: () {
+                                controller.addMember(
+                                    controller.listUser[index].id ?? '', index);
+                              },
+                              child: Container(
+                                color: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        ClipOval(
+                                          child: Image.network(
+                                            '${UtilLink.BASE_URL}${controller.listUser[index].avatar}',
+                                            height: 40,
+                                            width: 40,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                height: 40,
+                                                width: 40,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 5,
+                                                        horizontal: 6),
+                                                color: UtilColor.buttonBlue,
+                                              );
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        controller.listUser[index].name ?? '',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: UtilColor.textBase),
-                                      )
-                                    ],
-                                  ),
-                                  Obx(
-                                    () => controller.listIDUser[index] ==
-                                            controller.listUser[index].id
-                                        ? const Icon(Icons.radio_button_checked)
-                                        : const Icon(Icons.radio_button_off),
-                                  )
-                                ],
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          controller.listUser[index].name ?? '',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: UtilColor.textBase),
+                                        )
+                                      ],
+                                    ),
+                                    Obx(
+                                      () => controller.listIDUser[index] ==
+                                              controller.listUser[index].id
+                                          ? const Icon(
+                                              Icons.radio_button_checked)
+                                          : const Icon(Icons.radio_button_off),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         },
                       ),
                     ),

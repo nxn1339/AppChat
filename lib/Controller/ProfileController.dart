@@ -51,6 +51,7 @@ class ProfileController extends GetxController {
             .format(DateTime.parse(user.value.birthDay ?? ''));
         pickDate = DateTime.parse(user.value.birthDay ?? '');
         textEditEmail.text = user.value.email ?? '';
+        idGender.value = user.value.gender ?? 1;
         isLoading.value = false;
       }
     } catch (e) {
@@ -77,7 +78,8 @@ class ProfileController extends GetxController {
       "name": textEditName.text,
       "avatar": linkImage != '' ? linkImage : user.value.avatar,
       "gender": idGender.value,
-      "birth_day": DateFormat('yyyy-MM-ddTHH:mm:ss.SSSZ').format(pickDate!),
+      "birth_day": DateFormat('yyyy-MM-ddTHH:mm:ss.SSSZ')
+          .format(pickDate ?? DateTime.now()),
       "phone": textEditPhone.text
     };
     try {

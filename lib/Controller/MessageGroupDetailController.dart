@@ -104,13 +104,17 @@ class MessageGroupDetailController extends GetxController {
 
   void updateGroup() async {
     await postImage();
+    if (textEditNameGroup.text.trim().isEmpty) {
+      Utils.showSnackBar(
+          title: 'Lỗi', message: 'Tên nhóm không được bỏ trống !');
+      return;
+    }
     var body = {
       "id": group.value.id,
       "name": textEditNameGroup.text,
       "image": linkImage,
       "id_user": group.value.owner
     };
-    print(body);
     try {
       var response = await APICaller.getInstance().put('group/Change', body);
       if (response != null) {

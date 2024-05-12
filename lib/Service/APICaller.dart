@@ -57,6 +57,7 @@ class APICaller {
     if (jsonDecode(response.body)['code'] != 200) {
       Utils.showSnackBar(
           title: 'Thông báo', message: jsonDecode(response.body)['message']);
+      print(jsonDecode(response.body)['message']);
       return null;
     }
     return jsonDecode(response.body);

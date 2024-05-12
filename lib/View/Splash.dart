@@ -13,16 +13,15 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
     AwesomeNotifications().isNotificationAllowed().then((value) => {
-      if(!value){
-        AwesomeNotifications().requestPermissionToSendNotifications()
-      }
-    });
+          if (!value)
+            {AwesomeNotifications().requestPermissionToSendNotifications()}
+        });
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -91,21 +90,26 @@ class _SplashState extends State<Splash> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: UtilColor.buttonGrey,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(50))),
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      width: size.width,
-                      child: Center(
-                        child: Text(
-                          'Đăng ký',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: UtilColor.textGrey),
+                    GestureDetector(
+                      onTap: () {
+                        Navigation.navigateTo(page: 'RegisterScreen');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: UtilColor.buttonGrey,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(50))),
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        width: size.width,
+                        child: Center(
+                          child: Text(
+                            'Đăng ký',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: UtilColor.textGrey),
+                          ),
                         ),
                       ),
                     ),
@@ -128,7 +132,4 @@ class _SplashState extends State<Splash> {
       ),
     );
   }
-
 }
-
-

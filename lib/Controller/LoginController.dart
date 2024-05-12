@@ -35,7 +35,7 @@ class LoginController extends GetxController {
       Utils.showSnackBar(title: 'Thông báo', message: '$e');
     }
   }
-
+  
   void saveUser(var response) {
     Utils.saveStringWithKey('id', response['data']['id']);
     Utils.saveStringWithKey('name', response['data']['name']);

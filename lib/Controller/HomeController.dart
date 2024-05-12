@@ -2,6 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Model/MDMember.dart';
 import 'package:chat_app/Model/MDMessage.dart';
+import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Service/APICaller.dart';
 import 'package:chat_app/Service/SocketIO.dart';
 import 'package:chat_app/Utils/Utils.dart';
@@ -33,7 +34,6 @@ class HomeController extends GetxController {
 
     SocketIOCaller.getInstance().socket?.on('chat message', (data) {
       messageNew = MDMessage.fromJson(data);
-      print(messageNew.content);
       for (int i = 0; i < messageList.length; i++) {
         if (messageList[i].idGroup == messageNew.idGroup) {
           messageList[i] = messageNew;
@@ -220,5 +220,14 @@ class HomeController extends GetxController {
     await fecthStatusMessage();
 
     await checkLoading();
+  }
+
+  void logOut() async {
+    Utils.saveStringWithKey('id', '');
+    Utils.saveStringWithKey('name', '');
+    Utils.saveStringWithKey('avatar', '');
+    Utils.saveStringWithKey('token', '');
+
+    Navigation.navigateGetOffAll(page: 'LoginScreen');
   }
 }

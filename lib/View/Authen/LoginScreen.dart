@@ -1,4 +1,5 @@
 import 'package:chat_app/Controller/LoginController.dart';
+import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Utils/UtilColor.dart';
 import 'package:chat_app/Utils/Utils.dart';
 import 'package:chat_app/View/Group/CreateGroup.dart';
@@ -67,22 +68,27 @@ class LoginScreen extends StatelessWidget {
                         const SizedBox(
                           height: 14,
                         ),
-                        Align(
-                          alignment: FractionalOffset.centerRight,
-                          child: RichText(
-                              text: TextSpan(
-                                  children: [
-                                const TextSpan(text: 'Tạo tài khoản mới? '),
-                                TextSpan(
-                                    text: 'Đăng ký',
+                        GestureDetector(
+                          onTap: () {
+                            Navigation.navigateTo(page: 'RegisterScreen');
+                          },
+                          child: Align(
+                            alignment: FractionalOffset.centerRight,
+                            child: RichText(
+                                text: TextSpan(
+                                    children: [
+                                  const TextSpan(text: 'Tạo tài khoản mới? '),
+                                  TextSpan(
+                                      text: 'Đăng ký',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: UtilColor.textBase,
+                                          fontWeight: FontWeight.w800))
+                                ],
                                     style: TextStyle(
-                                        fontSize: 16,
-                                        color: UtilColor.textBase,
-                                        fontWeight: FontWeight.w800))
-                              ],
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: UtilColor.textGrey))),
+                                        fontSize: 14,
+                                        color: UtilColor.textGrey))),
+                          ),
                         ),
                       ],
                     ),

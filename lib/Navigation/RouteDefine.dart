@@ -1,3 +1,5 @@
+import 'package:chat_app/View/Authen/ChangePassword.dart';
+import 'package:chat_app/View/Authen/RegisterScreen.dart';
 import 'package:chat_app/View/Chat/AddMemberGroup.dart';
 import 'package:chat_app/View/Chat/MessageGroup.dart';
 import 'package:chat_app/View/Chat/MessageGroupDetail.dart';
@@ -26,6 +28,10 @@ class RouteDefine {
         return MessageSingle();
       case 'ProfileScreen':
         return ProfileScreen();
+      case 'ChangePassword':
+        return ChangePassword();
+      case 'RegisterScreen':
+        return RegisterScreen();
     }
   }
 }
