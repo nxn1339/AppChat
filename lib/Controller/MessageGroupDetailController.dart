@@ -43,7 +43,7 @@ class MessageGroupDetailController extends GetxController {
   void fechListUserGroup() async {
     try {
       var response =
-          await APICaller.getInstance().get('group/member/${group.value.id}');
+          await APICaller.getInstance().get('group/${group.value.id}');
       if (response != null) {
         List<dynamic> list = response['data'];
         var listItem =
@@ -79,8 +79,8 @@ class MessageGroupDetailController extends GetxController {
 
   Future leaveGrouporDeleteUser(String idUser, String action) async {
     try {
-      var response =
-          await APICaller.getInstance().delete('group/member/$idUser');
+      var response = await APICaller.getInstance()
+          .delete('group/member/$idUser/${group.value.id}');
       if (response != null) {
         if (Get.isRegistered<HomeController>()) {
           Get.find<HomeController>().refressGroup();

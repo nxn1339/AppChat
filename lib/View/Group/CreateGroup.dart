@@ -49,9 +49,14 @@ class CreateGroup extends StatelessWidget {
               height: 10,
             ),
             Utils.textFieldCustom(
-                maxLines: 1,
-                icon: const Icon(Icons.search),
-                hintText: 'Tìm kiếm'),
+              maxLines: 1,
+              icon: const Icon(Icons.search),
+              hintText: 'Tìm kiếm',
+              controller: controller.search,
+              onChanged: (value) {
+                controller.onSearchGroupChanged();
+              },
+            ),
             const SizedBox(
               height: 10,
             ),
@@ -59,73 +64,81 @@ class CreateGroup extends StatelessWidget {
               () => controller.listUser.isEmpty
                   ? Utils.noData()
                   : Expanded(
-                      child: ListView.builder(
-                        itemCount: controller.listUser.length,
-                        itemBuilder: (context, index) {
-                          if (controller.listUser[index].id ==
-                              controller.uuid) {
-                            return Container();
-                          } else {
-                            return GestureDetector(
-                              onTap: () {
-                                controller.addMember(
-                                    controller.listUser[index].id ?? '', index);
-                              },
-                              child: Container(
-                                color: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        ClipOval(
-                                          child: Image.network(
-                                            '${UtilLink.BASE_URL}${controller.listUser[index].avatar}',
-                                            height: 40,
-                                            width: 40,
-                                            fit: BoxFit.cover,
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return Container(
-                                                height: 40,
-                                                width: 40,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 5,
-                                                        horizontal: 6),
-                                                color: UtilColor.buttonBlue,
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          controller.listUser[index].name ?? '',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: UtilColor.textBase),
-                                        )
-                                      ],
-                                    ),
-                                    Obx(
-                                      () => controller.listIDUser[index] ==
-                                              controller.listUser[index].id
-                                          ? const Icon(
-                                              Icons.radio_button_checked)
-                                          : const Icon(Icons.radio_button_off),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          }
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          controller.refreshUser();
                         },
+                        child: ListView.builder(
+                          itemCount: controller.listUser.length,
+                          itemBuilder: (context, index) {
+                            if (controller.listUser[index].id ==
+                                controller.uuid) {
+                              return Container();
+                            } else {
+                              return GestureDetector(
+                                onTap: () {
+                                  controller.addMember(
+                                      controller.listUser[index].id ?? '',
+                                      index);
+                                },
+                                child: Container(
+                                  color: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          ClipOval(
+                                            child: Image.network(
+                                              '${UtilLink.BASE_URL}${controller.listUser[index].avatar}',
+                                              height: 40,
+                                              width: 40,
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 5,
+                                                      horizontal: 6),
+                                                  color: UtilColor.buttonBlue,
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            controller.listUser[index].name ??
+                                                '',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: UtilColor.textBase),
+                                          )
+                                        ],
+                                      ),
+                                      Obx(
+                                        () => controller.listIDUser[index] ==
+                                                controller.listUser[index].id
+                                            ? const Icon(
+                                                Icons.radio_button_checked)
+                                            : const Icon(
+                                                Icons.radio_button_off),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       ),
                     ),
             )

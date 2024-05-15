@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chat_app/Controller/HomeController.dart';
 import 'package:chat_app/Controller/LoginController.dart';
 import 'package:chat_app/Model/MDUser.dart';
@@ -14,10 +16,12 @@ class CreateGroupController extends GetxController {
   TextEditingController textEditNameGroup = TextEditingController();
   String uuid = '';
   RxBool isLoading = false.obs;
+  TextEditingController search = TextEditingController();
+  Timer? _debounce;
   @override
   void onInit() {
     super.onInit();
-    fecthGroup();
+    fecthUser();
     loadSavedText();
   }
 
@@ -38,16 +42,16 @@ class CreateGroupController extends GetxController {
     listIDUserInGroup = listIDUser;
   }
 
-  void fecthGroup() async {
+  fecthUser() async {
     try {
-      var response = await APICaller.getInstance().get('user');
+      var response =
+          await APICaller.getInstance().get('user/?keyword=${search.text}');
       if (response != null) {
         List<dynamic> list = response['data'];
         var listItem =
             list.map((dynamic json) => MDUser.fromJson(json)).toList();
         listUser.addAll(listItem);
         listUser.refresh();
-        // listUser.removeWhere((element) => element.id == uuid);
         listIDUser = RxList.generate(listUser.length, (index) => '');
       }
     } catch (e) {
@@ -58,7 +62,7 @@ class CreateGroupController extends GetxController {
   Future<void> addMemberInGroup(String idGroup) async {
     try {
       listIDUserInGroup =
-          listIDUserInGroup.where((element) => !element.isEmpty).toList();
+          listIDUserInGroup.where((element) => element.isNotEmpty).toList();
 
       for (var i = 0; i < listIDUserInGroup.length; i++) {
         var body = {
@@ -107,5 +111,19 @@ class CreateGroupController extends GetxController {
     } catch (e) {
       Utils.showSnackBar(title: "Thông báo", message: 'Có lỗi xảy ra !');
     }
+  }
+
+  void refreshUser() async {
+    if (listUser.isNotEmpty) {
+      listUser.clear();
+    }
+    await fecthUser();
+  }
+
+  onSearchGroupChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      refreshUser();
+    });
   }
 }

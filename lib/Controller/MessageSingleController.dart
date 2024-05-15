@@ -2,19 +2,24 @@ import 'dart:io';
 
 import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Model/MDMessage.dart';
+import 'package:chat_app/Model/MDUser.dart';
 import 'package:chat_app/Service/APICaller.dart';
 import 'package:chat_app/Service/SocketIO.dart';
+import 'package:chat_app/Utils/UtilLink.dart';
 import 'package:chat_app/Utils/Utils.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
-class MessageSingleController extends GetxController{
+class MessageSingleController extends GetxController {
   TextEditingController textEditingMessage = TextEditingController();
   RxList<MDMessage> messageList = RxList<MDMessage>();
   RxString uuid = "".obs;
   ScrollController scrollController = ScrollController();
   Rx<MDGroup> group = new MDGroup().obs;
+  Rx<MDUser> user = new MDUser().obs;
   RxList<File> imageFile = RxList<File>();
   String linkImage = '';
   @override
@@ -28,19 +33,69 @@ class MessageSingleController extends GetxController{
     });
   }
 
+  bool isImageLink(String link) {
+    // Danh sách các phần mở rộng ảnh phổ biến
+    List<String> imageExtensions = [
+      'jpg',
+      'jpeg',
+      'png',
+      'gif',
+      'bmp',
+      'webp',
+      'tiff',
+      'psd',
+      'raw',
+      'svg'
+    ];
+
+    // Chuyển đổi liên kết sang chữ thường để phù hợp với phần mở rộng
+    String lowercaseLink = link.toLowerCase();
+
+    // Kiểm tra xem liên kết có kết thúc bằng một trong các phần mở rộng ảnh không
+    for (var extension in imageExtensions) {
+      if (lowercaseLink.endsWith(extension)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  String getFileExtension(String fileName) {
+    int lastIndex = fileName.lastIndexOf('.');
+    if (lastIndex != -1 && lastIndex < fileName.length - 1) {
+      return fileName.substring(lastIndex + 1).toLowerCase();
+    }
+    return '';
+  }
+
+  void downloadFile(String fileName) async {
+    try {
+      var name = fileName.replaceAll('resources/', '');
+      var path = "/storage/emulated/0/Download/$name";
+      var file = File(path);
+      var res = await get(Uri.parse('${UtilLink.BASE_URL}$fileName'));
+      file.writeAsBytes(res.bodyBytes);
+      Utils.showSnackBar(title: 'Thông báo', message: 'Tải file thành công !');
+    } catch (e) {
+      Utils.showSnackBar(title: 'Lỗi', message: 'Không tải được file này !');
+    }
+  }
+
   void createStart() async {
     if (messageList.isNotEmpty) {
       messageList.clear();
     }
     uuid.value = await Utils.getStringValueWithKey('id');
-    group.value = await Get.arguments;
+    group.value = await Get.arguments[0];
+    user.value = await Get.arguments[1];
     fechListChat();
   }
 
   void fechListChat() async {
     try {
       var response =
-          await APICaller.getInstance().get('chat/${Get.arguments.id}');
+          await APICaller.getInstance().get('chat/${Get.arguments[0].id}');
       if (response != null) {
         List<dynamic> list = response['data'];
         var listItem =
@@ -57,7 +112,7 @@ class MessageSingleController extends GetxController{
     var body = {
       "content": textEditingMessage.text,
       "image": linkImage,
-      "id_group": Get.arguments.id,
+      "id_group": Get.arguments[0].id,
       "id_user": await Utils.getStringValueWithKey('id')
     };
     print(linkImage);
@@ -120,8 +175,15 @@ class MessageSingleController extends GetxController{
     if (imageFile.isNotEmpty) {
       imageFile.clear();
     }
-    List<File> file = await Utils.getImagePicker(source, false);
-    imageFile.addAll(file);
+    final result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      // Lấy danh sách các tệp đã chọn
+      List<File> files = result.paths.map((path) => File(path!)).toList();
+      imageFile.addAll(files);
+    }
+
+    // List<File> file = await Utils.getImagePicker(source, false);
+    // imageFile.addAll(file);
   }
 
   void clearImage() {

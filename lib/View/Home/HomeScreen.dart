@@ -21,47 +21,65 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text('Màn hình chính'),
-          backgroundColor: Colors.white,
-          foregroundColor: UtilColor.buttonBlack,
-          elevation: 0.5),
+        title: Text('Màn hình chính'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0.5,
+      ),
       drawer: NavigationDrawer(),
       body: DefaultTabController(
-        length: 2, // Số lượng tab
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Utils.textFieldCustom(
-                icon: const Icon(Icons.search), hintText: 'Nhập tìm kiếm'),
-            Container(
-              color: Colors.white,
-              child: TabBar(
-                indicatorColor: UtilColor.textBase,
-                labelColor: UtilColor.textBase,
-                tabs: const [
-                  Tab(text: 'Nhóm', icon: Icon(Icons.group)),
-                  Tab(
-                    text: 'Cá nhân',
-                    icon: Icon(Icons.person),
+        length: 2,
+        child: Builder(builder: (context) {
+          final TabController tabController = DefaultTabController.of(context);
+          tabController.addListener(() {
+            if (!tabController.indexIsChanging) {
+              controller.currentTabIndex.value = tabController.index;
+            }
+          });
+          return Obx(
+            () => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    if (controller.currentTabIndex.value != 0) {
+                      Navigation.navigateTo(page: 'SearchUser');
+                    }
+                  },
+                  child: Utils.textFieldCustom(
+                    icon: const Icon(Icons.search),
+                    hintText: 'Nhập tìm kiếm',
+                    controller: controller.search,
+                    enabled: controller.currentTabIndex.value == 0,
+                    onChanged: (value) {
+                      controller.onSearchGroupChanged();
+                    },
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  color: Colors.white,
+                  child: TabBar(
+                    indicatorColor: Colors.black,
+                    labelColor: Colors.black,
+                    tabs: const [
+                      Tab(text: 'Nhóm', icon: Icon(Icons.group)),
+                      Tab(text: 'Cá nhân', icon: Icon(Icons.person)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      buildGroupTab(context),
+                      buildPersonalTab(context),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  // Tab nhóm
-                  buildGroupTab(context),
-                  // Tab cá nhân
-                  buildPersonalTab(context),
-                ],
-              ),
-            ),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }
@@ -165,20 +183,52 @@ class HomeScreen extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                               color: UtilColor.textBase),
                         )),
+                    SizedBox(
+                      height: 16,
+                    ),
                     Obx(
                       () => Container(
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         child: RefreshIndicator(
                           onRefresh: () async {
-                            controller.refressGroup();
+                            controller.refreshSingle();
                           },
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: controller.listGroup.length,
-                            itemBuilder: (context, index) {
-                              return singleChat(controller.listGroup[index]);
-                            },
-                          ),
+                          child: controller.listGroupSingle.isEmpty ||
+                                  controller.listUser.isEmpty
+                              ? Utils.noData()
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: controller.listGroupSingle.length,
+                                  itemBuilder: (context, index) {
+                                    if (controller.listUser.length >=
+                                        index + 1) {
+                                      return GestureDetector(
+                                        onLongPress: () {
+                                          Utils.showDialog(
+                                            title: 'Xóa đoạn chat',
+                                            content: Text(
+                                              'Bạn có chắc muốn xóa đoạn chat với ${controller.listUser[index].name} ?',
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            onCancel: () {},
+                                            onConfirm: () {
+                                              controller.deleteGroupSingle(
+                                                  controller
+                                                          .listGroupSingle[
+                                                              index]
+                                                          .id ??
+                                                      '');
+                                            },
+                                          );
+                                        },
+                                        child: singleChat(
+                                            controller.listGroupSingle[index],
+                                            index),
+                                      );
+                                    }
+                                    return Container();
+                                  },
+                                ),
                         ),
                       ),
                     )
@@ -255,7 +305,8 @@ class HomeScreen extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                               color: UtilColor.textPurple),
                         ),
-                        controller.listStatusMessage.isNotEmpty
+                        controller.listStatusMessage.isNotEmpty &&
+                                controller.listStatusMessage.length >= index + 1
                             ? controller.listStatusMessage[index].readMessage ==
                                     1
                                 //Chưa đọc tin nhắn
@@ -332,21 +383,23 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget singleChat(MDGroup group) {
+  Widget singleChat(MDGroup group, int index) {
     return GestureDetector(
       onTap: () {
         if (Get.isRegistered<MessageSingleController>()) {
           Get.find<MessageSingleController>().createStart();
         }
         controller.updateStatus(group.id.toString());
-        Navigation.navigateTo(page: 'MessageSingle', arguments: group);
+        Navigation.navigateTo(
+            page: 'MessageSingle',
+            arguments: [group, controller.listUser[index]]);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           ClipOval(
             child: Image.network(
-              '${group.image}',
+              '${UtilLink.BASE_URL}${controller.listUser[index].avatar}',
               height: 50,
               width: 50,
               fit: BoxFit.cover,
@@ -359,7 +412,9 @@ class HomeScreen extends StatelessWidget {
                     color: UtilColor.buttonBlue,
                     child: Center(
                       child: Text(
-                        group.name!.isEmpty ? 'A' : group.name![0],
+                        controller.listUser[index].name!.isEmpty
+                            ? 'A'
+                            : controller.listUser[index].name![0],
                         style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -374,6 +429,7 @@ class HomeScreen extends StatelessWidget {
           ),
           Expanded(
             child: Container(
+              height: 50,
               decoration: BoxDecoration(
                   color: UtilColor.buttonGrey,
                   borderRadius: const BorderRadius.all(Radius.circular(10))),
@@ -385,7 +441,7 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    group.name ?? "",
+                    controller.listUser[index].name ?? "",
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,

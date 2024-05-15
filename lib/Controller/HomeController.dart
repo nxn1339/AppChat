@@ -1,16 +1,22 @@
+import 'dart:async';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:chat_app/Model/MDGroup.dart';
 import 'package:chat_app/Model/MDMember.dart';
 import 'package:chat_app/Model/MDMessage.dart';
+import 'package:chat_app/Model/MDUser.dart';
 import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Service/APICaller.dart';
 import 'package:chat_app/Service/SocketIO.dart';
 import 'package:chat_app/Utils/Utils.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class HomeController extends GetxController {
   RxList<MDGroup> listGroup = RxList<MDGroup>();
+  RxList<MDGroup> listGroupSingle = RxList<MDGroup>();
   RxList<MDMessage> messageList = RxList<MDMessage>();
   String uuid = '';
   RxList<MDMember> listStatusMessage = RxList<MDMember>();
@@ -22,12 +28,17 @@ class HomeController extends GetxController {
   RxBool isLoading = true.obs;
   RxString avatar = ''.obs;
   RxString name = ''.obs;
+  RxList<MDUser> listUser = RxList<MDUser>();
+  Timer? _debounce;
+  TextEditingController search = TextEditingController();
+  RxInt currentTabIndex = 0.obs;
 
   @override
   void onInit() async {
     super.onInit();
     await loadSavedText();
     await fecthGroup();
+    await fecthGroupSingle();
     await fecthLastChat();
     await fecthStatusMessage();
     await checkLoading();
@@ -109,8 +120,8 @@ class HomeController extends GetxController {
     isLoadingStatus = true;
     try {
       for (var i = 0; i < listGroup.length; i++) {
-        var response =
-            await APICaller.getInstance().get('group/$uuid/${listGroup[i].id}');
+        var response = await APICaller.getInstance()
+            .get('group/Status/$uuid/${listGroup[i].id}');
         if (response != null) {
           print(response);
           List<dynamic> list = response['data'];
@@ -129,7 +140,8 @@ class HomeController extends GetxController {
   fecthGroup() async {
     isLoadingGroup = true;
     try {
-      var response = await APICaller.getInstance().get('group/$uuid');
+      var response = await APICaller.getInstance()
+          .get('group/0/$uuid/?keyword=${search.text}');
       if (response != null) {
         List<dynamic> list = response['data'];
         var listItem =
@@ -137,6 +149,48 @@ class HomeController extends GetxController {
         listGroup.addAll(listItem);
         listGroup.refresh();
         isLoadingGroup = false;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  fecthGroupSingle() async {
+    isLoadingGroup = true;
+    try {
+      var response = await APICaller.getInstance().get('group/1/$uuid');
+      if (response != null) {
+        List<dynamic> list = response['data'];
+        var listItem =
+            list.map((dynamic json) => MDGroup.fromJson(json)).toList();
+        listGroupSingle.addAll(listItem);
+        listGroupSingle.refresh();
+        await fechListUserGroup();
+        isLoadingGroup = false;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  fechListUserGroup() async {
+    if (listUser.isNotEmpty) {
+      listUser.clear();
+    }
+    try {
+      for (int i = 0; i < listGroupSingle.length; i++) {
+        var response =
+            await APICaller.getInstance().get('group/${listGroupSingle[i].id}');
+        if (response != null) {
+          List<dynamic> list = response['data'];
+          var listItem = list
+              .map((dynamic json) => MDUser.fromJson(json))
+              .where((user) => user.id != uuid)
+              .toList();
+
+          listUser.addAll(listItem);
+          listUser.refresh();
+        }
       }
     } catch (e) {
       print(e);
@@ -204,6 +258,13 @@ class HomeController extends GetxController {
     return outputDateTime;
   }
 
+  void refreshSingle() async {
+    if (listGroupSingle.isNotEmpty) {
+      listGroupSingle.clear();
+    }
+    await fecthGroupSingle();
+  }
+
   void refressGroup() async {
     isLoading.value = true;
     if (listGroup.isNotEmpty) {
@@ -220,6 +281,27 @@ class HomeController extends GetxController {
     await fecthStatusMessage();
 
     await checkLoading();
+  }
+
+  onSearchGroupChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      refressGroup();
+    });
+  }
+
+  Future deleteGroupSingle(String idGroup) async {
+    try {
+      var response = await APICaller.getInstance().delete('group/$idGroup');
+      if (response != null) {
+        Get.back();
+        refreshSingle();
+        Utils.showSnackBar(
+            title: 'Thông báo', message: 'Xóa đoạn chat thành công!');
+      }
+    } catch (e) {
+      Utils.showSnackBar(title: 'Thông báo', message: '$e');
+    }
   }
 
   void logOut() async {
