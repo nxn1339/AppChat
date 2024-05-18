@@ -68,6 +68,24 @@ class MessageGroup extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigation.navigateTo(
+                  page: 'WorkScreen', arguments: controller.group);
+            },
+            child: Container(
+                decoration: BoxDecoration(
+                    color: UtilColor.buttonRed,
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                padding: EdgeInsets.all(4),
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: Icon(
+                  Icons.note_alt_rounded,
+                  color: Colors.white,
+                )),
+          )
+        ],
       ),
       body: Column(
         children: [

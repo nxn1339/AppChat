@@ -5,6 +5,8 @@ import 'package:chat_app/View/Chat/MessageGroup.dart';
 import 'package:chat_app/View/Chat/MessageGroupDetail.dart';
 import 'package:chat_app/View/Chat/MessageSingle.dart';
 import 'package:chat_app/View/Group/CreateGroup.dart';
+import 'package:chat_app/View/Group/ReportScreen.dart';
+import 'package:chat_app/View/Group/WorkScreen.dart';
 import 'package:chat_app/View/Home/HomeScreen.dart';
 import 'package:chat_app/View/Authen/LoginScreen.dart';
 import 'package:chat_app/View/Home/SearchUser.dart';
@@ -35,6 +37,10 @@ class RouteDefine {
         return RegisterScreen();
       case 'SearchUser':
         return SearchUser();
+      case 'WorkScreen':
+        return WorkScreen();
+      case 'ReportScreen':
+        return ReportScreen();
     }
   }
 }
