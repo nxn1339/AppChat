@@ -43,25 +43,33 @@ class SearchUserController extends GetxController {
     }
   }
 
-  Future<bool> fecthCheck(String idUser) async {
+  Future<bool> fetchCheck(String idUser) async {
     try {
       var response =
           await APICaller.getInstance().get('group/Check/$uuid/$idUser');
-      if (response != null) {
-        if (response['data']['COUNT(*)'] > 0) {
-          return false;
-        } else {
-          return true;
+      if (response != null &&
+          response.containsKey('data') &&
+          response['data'] is List) {
+        var dataList = response['data'] as List;
+        if (dataList.isNotEmpty) {
+          var check = dataList[0]['cnt'];
+          if (check is int && check > 0) {
+            return false;
+          } else {
+            return true;
+          }
         }
       }
+
       return true;
     } catch (e) {
+      print(e);
       return false;
     }
   }
 
   Future<void> createGroup(BuildContext context, String idUser) async {
-    if (await fecthCheck(idUser) == false) {
+    if (await fetchCheck(idUser) == false) {
       Get.back();
       return;
     }
