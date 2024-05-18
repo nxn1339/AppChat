@@ -173,15 +173,18 @@ class MessageGroupController extends GetxController {
     if (imageFile.isNotEmpty) {
       imageFile.clear();
     }
-    final result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      // Lấy danh sách các tệp đã chọn
-      List<File> files = result.paths.map((path) => File(path!)).toList();
-      imageFile.addAll(files);
+    if (source == 0) {
+      final result = await FilePicker.platform.pickFiles();
+      if (result != null) {
+        // Lấy danh sách các tệp đã chọn
+        List<File> files = result.paths.map((path) => File(path!)).toList();
+        imageFile.addAll(files);
+      }
+    } else {
+      List<File> file = await Utils.getImagePicker(source, false);
+      imageFile.addAll(file);
     }
-
-    // List<File> file = await Utils.getImagePicker(source, false);
-    // imageFile.addAll(file);
+    Get.back();
   }
 
   void clearImage() {

@@ -43,7 +43,29 @@ class SearchUserController extends GetxController {
     }
   }
 
+  Future<bool> fecthCheck(String idUser) async {
+    try {
+      var response =
+          await APICaller.getInstance().get('group/Check/$uuid/$idUser');
+      if (response != null) {
+        if (response['data']['COUNT(*)'] > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<void> createGroup(BuildContext context, String idUser) async {
+    if (await fecthCheck(idUser) == false) {
+      Get.back();
+      return;
+    }
+
     if (Get.isRegistered<HomeController>()) {
       Get.find<HomeController>().listGroupSingle;
     }
@@ -53,7 +75,8 @@ class SearchUserController extends GetxController {
         "image": "",
         "id_user": uuid,
         "type": 1,
-        "id_group": ""
+        "id_group": "",
+        "id_user_single": idUser
       };
 
       var response = await APICaller.getInstance().post('group', body);

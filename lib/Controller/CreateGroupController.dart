@@ -89,7 +89,8 @@ class CreateGroupController extends GetxController {
         "name": textEditNameGroup.text,
         "image": "",
         "id_user": uuid,
-        "type": 0
+        "type": 0,
+        "id_user_single": ""
       };
 
       var response = await APICaller.getInstance().post('group', body);

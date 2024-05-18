@@ -149,7 +149,26 @@ class ReportScreen extends StatelessWidget {
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           ],
-                                        )
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Thời gian báo cáo: ',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            Text(
+                                              controller.convertDateTimeFormat(
+                                                  controller.listReport[index]
+                                                      .updateAt
+                                                      .toString()),
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        ),
                                       ]),
                                     ),
                                   ),

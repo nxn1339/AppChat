@@ -540,7 +540,7 @@ class MessageGroup extends StatelessWidget {
                         child: Utils.textFieldCustom(
                             icon: GestureDetector(
                                 onTap: () {
-                                  controller.getImage(0);
+                                  showBottomSheet(context);
                                 },
                                 child: Icon(Icons.file_present)),
                             controller: controller.textEditingMessage,
@@ -612,6 +612,35 @@ class MessageGroup extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void showBottomSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.folder),
+                title: Text('Thư mục'),
+                onTap: () {
+                  controller.getImage(0);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.camera),
+                title: Text('Camera'),
+                onTap: () {
+                  controller.getImage(1);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
