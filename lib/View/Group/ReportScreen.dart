@@ -74,7 +74,11 @@ class ReportScreen extends StatelessWidget {
                                         textConfirm: 'Ok');
                                   },
                                   child: Card(
-                                    color: UtilColor.buttonLightBlue,
+                                    color:
+                                        controller.listReport[index].percent ==
+                                                1
+                                            ? Colors.green
+                                            : UtilColor.buttonLightBlue,
                                     child: Container(
                                       margin: EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 10),

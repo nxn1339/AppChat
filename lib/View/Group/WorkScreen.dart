@@ -95,17 +95,18 @@ class WorkScreen extends StatelessWidget {
                                               '');
                                     },
                                     child: Card(
-                                      color: UtilColor.buttonLightBlue,
+                                      color: UtilColor.buttonBlack,
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
-                                            vertical: 10),
+                                            vertical: 10, horizontal: 5),
                                         child: Row(
                                           children: [
                                             Text(
-                                              (index + 1).toString(),
+                                              (index + 1).toString() + '.',
                                               style: const TextStyle(
                                                   fontSize: 20,
-                                                  fontWeight: FontWeight.w500),
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.white),
                                             ),
                                             const SizedBox(
                                               width: 4,
@@ -113,9 +114,10 @@ class WorkScreen extends StatelessWidget {
                                             Text(
                                               controller.listWork[index].name ??
                                                   '',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                   fontSize: 20,
-                                                  fontWeight: FontWeight.w500),
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.white),
                                             ),
                                           ],
                                         ),

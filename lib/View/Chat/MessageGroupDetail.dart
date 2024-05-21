@@ -205,18 +205,21 @@ class MessageGroupDetail extends StatelessWidget {
                               onTap: () {
                                 if (controller.group.value.owner !=
                                     controller.listUser[index].id) {
-                                  Utils.showDialog(
-                                    title: 'Loại bỏ thành viên',
-                                    content: Text(
-                                        'Loại bỏ ${controller.listUser[index].name} ra khỏi nhóm ?'),
-                                    onCancel: () {},
-                                    onConfirm: () {
-                                      controller.leaveGrouporDeleteUser(
-                                          controller.listUser[index].id
-                                              .toString(),
-                                          'DeleteUser');
-                                    },
-                                  );
+                                  if (controller.group.value.owner ==
+                                      controller.uuid) {
+                                    Utils.showDialog(
+                                      title: 'Loại bỏ thành viên',
+                                      content: Text(
+                                          'Loại bỏ ${controller.listUser[index].name} ra khỏi nhóm ?'),
+                                      onCancel: () {},
+                                      onConfirm: () {
+                                        controller.leaveGrouporDeleteUser(
+                                            controller.listUser[index].id
+                                                .toString(),
+                                            'DeleteUser');
+                                      },
+                                    );
+                                  }
                                 }
                               },
                               child: Container(
