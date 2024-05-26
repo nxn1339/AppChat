@@ -22,9 +22,9 @@ class LoginController extends GetxController {
     try {
       var response = await APICaller.getInstance().post('user/login', body);
       if (response != null) {
+        saveUser(response);
         Future.delayed(Duration(seconds: 2), () {
           Navigation.navigateTo(page: 'HomeScreen');
-          saveUser(response);
           Utils.showSnackBar(
               title: "Thông báo", message: "Đăng nhập thành công !");
         });
@@ -35,7 +35,7 @@ class LoginController extends GetxController {
       Utils.showSnackBar(title: 'Thông báo', message: '$e');
     }
   }
-  
+
   void saveUser(var response) {
     Utils.saveStringWithKey('id', response['data']['id']);
     Utils.saveStringWithKey('name', response['data']['name']);

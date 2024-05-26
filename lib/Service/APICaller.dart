@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Utils/UtilLink.dart';
 import 'package:chat_app/Utils/Utils.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class APICaller {
@@ -19,6 +22,7 @@ class APICaller {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
+      'Authorization': 'bearer ${await Utils.getStringValueWithKey('token')}'
     };
 
     Uri uri = Uri.parse(UtilLink.BASE_URL + endpoint);
@@ -33,6 +37,7 @@ class APICaller {
     if (jsonDecode(response.body)['code'] != 200) {
       Utils.showSnackBar(
           title: 'Thông báo', message: jsonDecode(response.body)['message']);
+      checkToken(jsonDecode(response.body)['code']);
       return null;
     }
     return jsonDecode(response.body);
@@ -57,7 +62,7 @@ class APICaller {
     if (jsonDecode(response.body)['code'] != 200) {
       Utils.showSnackBar(
           title: 'Thông báo', message: jsonDecode(response.body)['message']);
-      print(jsonDecode(response.body)['message']);
+      checkToken(jsonDecode(response.body)['code']);
       return null;
     }
     return jsonDecode(response.body);
@@ -83,6 +88,7 @@ class APICaller {
     if (jsonDecode(response.body)['code'] != 200) {
       Utils.showSnackBar(
           title: 'Thông báo', message: jsonDecode(response.body)['message']);
+      checkToken(jsonDecode(response.body)['code']);
       return null;
     }
     return jsonDecode(response.body);
@@ -106,6 +112,7 @@ class APICaller {
     if (jsonDecode(response.body)['code'] != 200) {
       Utils.showSnackBar(
           title: 'Thông báo', message: jsonDecode(response.body)['message']);
+      checkToken(jsonDecode(response.body)['code']);
       return null;
     }
     return jsonDecode(response.body);
@@ -136,8 +143,24 @@ class APICaller {
     if (jsonDecode(response.body)['code'] != 200) {
       Utils.showSnackBar(
           title: 'Thông báo', message: jsonDecode(response.body)['message']);
+      checkToken(jsonDecode(response.body)['code']);
       return null;
     }
     return jsonDecode(response.body);
+  }
+
+  void checkToken(dynamic code) {
+    if (code == 401) {
+      Utils.showDialog(
+        title: 'Hết hạn đăng nhập',
+        content: Text('Đi đến đăng nhập ngay!'),
+        textCancel: "Để sau",
+        textConfirm: "Đăng nhập",
+        onCancel: () {},
+        onConfirm: () {
+          Navigation.navigateGetOffAll(page: 'LoginScreen');
+        },
+      );
+    }
   }
 }

@@ -16,15 +16,30 @@ class MessageGroupController extends GetxController {
   TextEditingController textEditingMessage = TextEditingController();
   RxList<MDMessage> messageList = RxList<MDMessage>();
   RxString uuid = "".obs;
-  ScrollController scrollController = ScrollController();
   Rx<MDGroup> group = new MDGroup().obs;
   RxList<File> imageFile = RxList<File>();
   String linkImage = '';
+  Rx<ScrollController> scrollControllerLoadMore = new ScrollController().obs;
+  int page = 1;
+  int total = 0;
+  RxBool isLoading = false.obs;
 
   @override
   void onInit() async {
     super.onInit();
     createStart();
+    scrollControllerLoadMore.value.addListener(() {
+      if (scrollControllerLoadMore.value.position.pixels <=
+          scrollControllerLoadMore.value.position.minScrollExtent) {
+        isLoading.value = true;
+        if (total > messageList.length) {
+          page++;
+          fechListChatLoadMore();
+        } else {
+          isLoading.value = false;
+        }
+      }
+    });
     SocketIOCaller.getInstance().socket?.on('chat message', (data) {
       sendChat();
       messageList.add(MDMessage.fromJson(data));
@@ -82,27 +97,53 @@ class MessageGroupController extends GetxController {
   }
 
   void createStart() async {
+    page = 1;
+    isLoading.value = false;
     if (messageList.isNotEmpty) {
       messageList.clear();
     }
     uuid.value = await Utils.getStringValueWithKey('id');
     group.value = await Get.arguments;
     fechListChat();
+    scrollChat();
   }
 
   void fechListChat() async {
+    isLoading.value = true;
     try {
-      var response =
-          await APICaller.getInstance().get('chat/${Get.arguments.id}');
+      var response = await APICaller.getInstance()
+          .get('chat/${Get.arguments.id}?page=$page');
       if (response != null) {
+        total = response['meta']['total'];
         List<dynamic> list = response['data'];
         var listItem =
             list.map((dynamic json) => MDMessage.fromJson(json)).toList();
-        messageList.addAll(listItem);
+
+        messageList.addAll(listItem.reversed);
         messageList.refresh();
+        isLoading.value = false;
       }
     } catch (e) {
-      print(e);
+      print('Error fetching chat: $e');
+    }
+  }
+
+  void fechListChatLoadMore() async {
+    try {
+      var response = await APICaller.getInstance()
+          .get('chat/${Get.arguments.id}?page=$page');
+      if (response != null) {
+        total = response['meta']['total'];
+        List<dynamic> list = response['data'];
+        var listItem =
+            list.map((dynamic json) => MDMessage.fromJson(json)).toList();
+
+        messageList.insertAll(0, listItem.reversed);
+        messageList.refresh();
+        isLoading.value = false;
+      }
+    } catch (e) {
+      print('Error fetching chat: $e');
     }
   }
 
@@ -148,8 +189,11 @@ class MessageGroupController extends GetxController {
   }
 
   void scrollChat() {
-    scrollController.animateTo(
-      scrollController.position.maxScrollExtent + 100,
+    if (scrollControllerLoadMore == null) {
+      return;
+    }
+    scrollControllerLoadMore.value.animateTo(
+      (scrollControllerLoadMore.value.position.maxScrollExtent * 3),
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
@@ -191,5 +235,11 @@ class MessageGroupController extends GetxController {
     if (imageFile.isNotEmpty) {
       imageFile.clear();
     }
+  }
+
+  refreshData() {
+    page = 1;
+    messageList.clear();
+    fechListChat();
   }
 }

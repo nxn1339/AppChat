@@ -62,12 +62,18 @@ class MessageSingle extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const Expanded(
-            flex: 1,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[],
+          Obx(
+            () => Expanded(
+              flex: controller.isLoading.value == true ? 10 : 1,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    controller.isLoading.value == true
+                        ? CircularProgressIndicator()
+                        : Container()
+                  ],
+                ),
               ),
             ),
           ),
@@ -75,7 +81,7 @@ class MessageSingle extends StatelessWidget {
             flex: 100,
             child: Obx(
               () => ListView.builder(
-                controller: controller.scrollController,
+                controller: controller.scrollControllerLoadMore.value,
                 itemCount: controller.messageList.length,
                 itemBuilder: (context, index) {
                   if (controller.messageList[index].content != "" ||

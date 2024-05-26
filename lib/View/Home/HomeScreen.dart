@@ -92,69 +92,78 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Hội nhóm",
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: UtilColor.textBase),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigation.navigateTo(page: 'CreateGroup');
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: UtilColor.buttonBlack,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(50))),
-                              height: 30,
-                              width: 60,
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  controller.refressGroup();
+                },
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Hội nhóm",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: UtilColor.textBase),
                             ),
-                          )
-                        ],
+                            GestureDetector(
+                              onTap: () {
+                                Navigation.navigateTo(page: 'CreateGroup');
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: UtilColor.buttonBlack,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(50))),
+                                height: 30,
+                                width: 60,
+                                child: const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    Obx(
-                      () => controller.listGroup.isEmpty
-                          ? Utils.noData()
-                          : Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: RefreshIndicator(
-                                onRefresh: () async {
-                                  controller.refressGroup();
-                                },
-                                child: controller.isLoading.value
-                                    ? const Center(
-                                        child: CircularProgressIndicator())
-                                    : ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: controller.listGroup.length,
-                                        itemBuilder: (context, index) {
-                                          return groupChat(
-                                              controller.listGroup[index],
-                                              index);
-                                        },
-                                      ),
-                              ),
-                            ),
-                    )
-                  ],
+                      Obx(
+                        () => RefreshIndicator(
+                          onRefresh: () async {
+                            controller.refressGroup();
+                          },
+                          child: controller.listGroup.isEmpty
+                              ? Utils.noData()
+                              : Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: controller.isLoading.value
+                                      ? const Center(
+                                          child: CircularProgressIndicator())
+                                      : SizedBox(
+                                          height: size.width,
+                                          child: ListView.builder(
+                                            itemCount:
+                                                controller.listGroup.length,
+                                            itemBuilder: (context, index) {
+                                              return groupChat(
+                                                  controller.listGroup[index],
+                                                  index);
+                                            },
+                                          ),
+                                        ),
+                                ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             )
@@ -170,69 +179,79 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          'Cá nhân',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: UtilColor.textBase),
-                        )),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Obx(
-                      () => Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        child: RefreshIndicator(
-                          onRefresh: () async {
-                            controller.refreshSingle();
-                          },
-                          child: controller.listGroupSingle.isEmpty ||
-                                  controller.listUser.isEmpty
-                              ? Utils.noData()
-                              : ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: controller.listGroupSingle.length,
-                                  itemBuilder: (context, index) {
-                                    if (controller.listUser.length >=
-                                        index + 1) {
-                                      return GestureDetector(
-                                        onLongPress: () {
-                                          Utils.showDialog(
-                                            title: 'Xóa đoạn chat',
-                                            content: Text(
-                                              'Bạn có chắc muốn xóa đoạn chat với ${controller.listUser[index].name} ?',
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            onCancel: () {},
-                                            onConfirm: () {
-                                              controller.deleteGroupSingle(
-                                                  controller
-                                                          .listGroupSingle[
-                                                              index]
-                                                          .id ??
-                                                      '');
-                                            },
-                                          );
-                                        },
-                                        child: singleChat(
-                                            controller.listGroupSingle[index],
-                                            index),
-                                      );
-                                    }
-                                    return Container();
-                                  },
-                                ),
-                        ),
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  controller.refreshSingle();
+                },
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            'Cá nhân',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: UtilColor.textBase),
+                          )),
+                      SizedBox(
+                        height: 16,
                       ),
-                    )
-                  ],
+                      Obx(
+                        () => Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              controller.refreshSingle();
+                            },
+                            child: controller.listGroupSingle.isEmpty ||
+                                    controller.listUser.isEmpty
+                                ? Utils.noData()
+                                : SizedBox(
+                                    height: size.width,
+                                    child: ListView.builder(
+                                      itemCount:
+                                          controller.listGroupSingle.length,
+                                      itemBuilder: (context, index) {
+                                        if (controller.listUser.length >=
+                                            index + 1) {
+                                          return GestureDetector(
+                                            onLongPress: () {
+                                              Utils.showDialog(
+                                                title: 'Xóa đoạn chat',
+                                                content: Text(
+                                                  'Bạn có chắc muốn xóa đoạn chat với ${controller.listUser[index].name} ?',
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                onCancel: () {},
+                                                onConfirm: () {
+                                                  controller.deleteGroupSingle(
+                                                      controller
+                                                              .listGroupSingle[
+                                                                  index]
+                                                              .id ??
+                                                          '');
+                                                },
+                                              );
+                                            },
+                                            child: singleChat(
+                                                controller
+                                                    .listGroupSingle[index],
+                                                index),
+                                          );
+                                        }
+                                        return Container();
+                                      },
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             )
