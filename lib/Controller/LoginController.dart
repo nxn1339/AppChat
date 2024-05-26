@@ -1,3 +1,4 @@
+import 'package:chat_app/Controller/HomeController.dart';
 import 'package:chat_app/Navigation/Navigation.dart';
 import 'package:chat_app/Service/APICaller.dart';
 import 'package:chat_app/Utils/Utils.dart';
@@ -41,5 +42,9 @@ class LoginController extends GetxController {
     Utils.saveStringWithKey('name', response['data']['name']);
     Utils.saveStringWithKey('avatar', response['data']['avatar']);
     Utils.saveStringWithKey('token', response['data']['token']);
+
+    if (Get.isRegistered<HomeController>()) {
+      Get.find<HomeController>().loadSavedText();
+    }
   }
 }
