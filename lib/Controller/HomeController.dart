@@ -68,13 +68,17 @@ class HomeController extends GetxController {
               } else {
                 content = messageNew.content.toString();
               }
-              AwesomeNotifications().createNotification(
-                  content: NotificationContent(
-                id: 1,
-                channelKey: 'Key',
-                title: '${messageNew.name} Đã gửi tin nhắn mới',
-                body: content,
-              ));
+              print(name);
+              print(messageNew.name);
+              if (name != messageNew.name) {
+                AwesomeNotifications().createNotification(
+                    content: NotificationContent(
+                  id: 1,
+                  channelKey: 'Key',
+                  title: '${messageNew.name} Đã gửi tin nhắn mới',
+                  body: content,
+                ));
+              }
             }
           }
         } else {
@@ -305,10 +309,10 @@ class HomeController extends GetxController {
   }
 
   void logOut() async {
-    Utils.saveStringWithKey('id', '');
-    Utils.saveStringWithKey('name', '');
-    Utils.saveStringWithKey('avatar', '');
-    Utils.saveStringWithKey('token', '');
+    await Utils.saveStringWithKey('id', '');
+    await Utils.saveStringWithKey('name', '');
+    await Utils.saveStringWithKey('avatar', '');
+    await Utils.saveStringWithKey('token', '');
 
     Navigation.navigateGetOffAll(page: 'LoginScreen');
   }
