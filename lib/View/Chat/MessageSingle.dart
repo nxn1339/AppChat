@@ -628,7 +628,7 @@ class MessageSingle extends StatelessWidget {
     var avatar = await Utils.getStringValueWithKey('avatar');
     var name = await Utils.getStringValueWithKey('name');
     if (content.isNotEmpty || image.isNotEmpty) {
-      SocketIOCaller.getInstance().socket?.emit('chat message', {
+      SocketIOCaller.getInstance().socket?.emit('messageSingle', {
         'id_user': idUser,
         'time': DateTime.now().toIso8601String(),
         'content': content,

@@ -191,7 +191,7 @@ class HomeController extends GetxController {
               .map((dynamic json) => MDUser.fromJson(json))
               .where((user) => user.id != uuid && list.length > 1)
               .toList();
-
+          print(uuid);
           listUser.addAll(listItem);
           listUser.refresh();
         }

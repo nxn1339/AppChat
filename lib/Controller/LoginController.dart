@@ -10,12 +10,15 @@ class LoginController extends GetxController {
   TextEditingController textEditPassword = TextEditingController();
   RxBool isShowPass = false.obs;
 
+  bool isLogin = false;
+
   void changeShowPass() {
     isShowPass.value = !isShowPass.value;
   }
 
   //hàm login
   login() async {
+    isLogin = false;
     var body = {
       "username": textEditUserName.text,
       "password": textEditPassword.text
@@ -23,12 +26,12 @@ class LoginController extends GetxController {
     try {
       var response = await APICaller.getInstance().post('user/login', body);
       if (response != null) {
-        saveUser(response);
-        Future.delayed(Duration(seconds: 2), () {
+        await saveUser(response);
+        if (isLogin == true) {
           Navigation.navigateTo(page: 'HomeScreen');
           Utils.showSnackBar(
               title: "Thông báo", message: "Đăng nhập thành công !");
-        });
+        }
       } else {
         Utils.showSnackBar(title: 'Thông báo', message: response['message']);
       }
@@ -37,7 +40,7 @@ class LoginController extends GetxController {
     }
   }
 
-  void saveUser(var response) {
+  saveUser(var response) {
     Utils.saveStringWithKey('id', response['data']['id']);
     Utils.saveStringWithKey('name', response['data']['name']);
     Utils.saveStringWithKey('avatar', response['data']['avatar']);
@@ -46,5 +49,6 @@ class LoginController extends GetxController {
     if (Get.isRegistered<HomeController>()) {
       Get.find<HomeController>().loadSavedText();
     }
+    isLogin = true;
   }
 }

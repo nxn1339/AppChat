@@ -41,7 +41,7 @@ class MessageSingleController extends GetxController {
         }
       }
     });
-    SocketIOCaller.getInstance().socket?.on('chat message', (data) {
+    SocketIOCaller.getInstance().socket?.on('messageSingle', (data) {
       sendChat();
       messageList.add(MDMessage.fromJson(data));
       scrollChat();
