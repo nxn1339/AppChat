@@ -52,7 +52,6 @@ class MessageGroupDetailController extends GetxController {
         listUser.refresh();
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -124,7 +123,6 @@ class MessageGroupDetailController extends GetxController {
         Get.close(2);
       }
     } catch (e) {
-      print(e);
     }
   }
 

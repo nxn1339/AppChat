@@ -68,8 +68,6 @@ class HomeController extends GetxController {
               } else {
                 content = messageNew.content.toString();
               }
-              print(name);
-              print(messageNew.name);
               if (name != messageNew.name) {
                 AwesomeNotifications().createNotification(
                     content: NotificationContent(
@@ -127,7 +125,6 @@ class HomeController extends GetxController {
         var response = await APICaller.getInstance()
             .get('group/Status/$uuid/${listGroup[i].id}');
         if (response != null) {
-          print(response);
           List<dynamic> list = response['data'];
           var listItem =
               list.map((dynamic json) => MDMember.fromJson(json)).toList();
@@ -137,7 +134,6 @@ class HomeController extends GetxController {
         }
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -155,7 +151,6 @@ class HomeController extends GetxController {
         isLoadingGroup = false;
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -173,7 +168,6 @@ class HomeController extends GetxController {
         isLoadingGroup = false;
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -191,13 +185,11 @@ class HomeController extends GetxController {
               .map((dynamic json) => MDUser.fromJson(json))
               .where((user) => user.id != uuid && list.length > 1)
               .toList();
-          print(uuid);
           listUser.addAll(listItem);
           listUser.refresh();
         }
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -217,7 +209,6 @@ class HomeController extends GetxController {
         }
       }
     } catch (e) {
-      print(e);
     } finally {}
   }
 
@@ -233,7 +224,6 @@ class HomeController extends GetxController {
         });
       }
     } catch (e) {
-      print(e);
     } finally {}
   }
 

@@ -54,9 +54,7 @@ class AddMemberGroupController extends GetxController {
         listUser.removeWhere((element) => element.id == uuid);
         listIDUser = RxList.generate(listUser.length, (index) => '');
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<void> addMemberInGroup() async {

@@ -34,7 +34,6 @@ class ChangePasswordController extends GetxController {
     } else {
       if (oldPass.text.trim() == '') {
         oldPassValidate.value = 'Mật khẩu cũ đang trống !';
-        print(oldPass.text.trim());
       } else {
         oldPassValidate.value = '';
       }

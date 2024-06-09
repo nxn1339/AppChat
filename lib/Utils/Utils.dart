@@ -289,7 +289,6 @@ class Utils {
         });
       }
     } catch (e) {
-      print(e);
     }
     return files;
   }

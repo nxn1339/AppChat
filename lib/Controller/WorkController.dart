@@ -39,7 +39,6 @@ class WorkController extends GetxController {
         isLoading.value = false;
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -56,7 +55,6 @@ class WorkController extends GetxController {
         refreshWork();
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -72,7 +70,6 @@ class WorkController extends GetxController {
         refreshWork();
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -84,7 +81,6 @@ class WorkController extends GetxController {
         refreshWork();
       }
     } catch (e) {
-      print(e);
     }
   }
 

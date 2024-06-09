@@ -124,7 +124,6 @@ class MessageGroupController extends GetxController {
         isLoading.value = false;
       }
     } catch (e) {
-      print('Error fetching chat: $e');
     }
   }
 
@@ -143,7 +142,6 @@ class MessageGroupController extends GetxController {
         isLoading.value = false;
       }
     } catch (e) {
-      print('Error fetching chat: $e');
     }
   }
 
@@ -154,12 +152,10 @@ class MessageGroupController extends GetxController {
       "id_group": Get.arguments.id,
       "id_user": await Utils.getStringValueWithKey('id')
     };
-    print(linkImage);
     var response = await APICaller.getInstance().post('chat', body);
     if (response != null) {
       textEditingMessage.clear();
       linkImage = '';
-      print('Gửi thành công');
     }
   }
 

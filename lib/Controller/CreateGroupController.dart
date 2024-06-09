@@ -54,9 +54,7 @@ class CreateGroupController extends GetxController {
         listUser.refresh();
         listIDUser = RxList.generate(listUser.length, (index) => '');
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<void> addMemberInGroup(String idGroup) async {

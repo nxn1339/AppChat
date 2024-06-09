@@ -55,7 +55,6 @@ class ReportController extends GetxController {
         isLoading.value = false;
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -73,7 +72,6 @@ class ReportController extends GetxController {
         refreshReport();
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -93,7 +91,6 @@ class ReportController extends GetxController {
         refreshReport();
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -105,7 +102,6 @@ class ReportController extends GetxController {
         refreshReport();
       }
     } catch (e) {
-      print(e);
     }
   }
 

@@ -55,7 +55,6 @@ class ProfileController extends GetxController {
         isLoading.value = false;
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -107,7 +106,6 @@ class ProfileController extends GetxController {
           linkImage = response['image'];
         }
       } catch (e) {
-        print(e);
       }
     }
   }

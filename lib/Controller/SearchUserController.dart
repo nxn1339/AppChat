@@ -39,7 +39,6 @@ class SearchUserController extends GetxController {
         listUser.refresh();
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -63,7 +62,6 @@ class SearchUserController extends GetxController {
 
       return true;
     } catch (e) {
-      print(e);
       return false;
     }
   }
@@ -110,7 +108,6 @@ class SearchUserController extends GetxController {
       };
       var response = await APICaller.getInstance().post('group/member', body);
       if (response != null) {
-        print('OKE');
       }
     } catch (e) {
       Utils.showSnackBar(title: "Thông báo", message: 'Có lỗi xảy ra !');

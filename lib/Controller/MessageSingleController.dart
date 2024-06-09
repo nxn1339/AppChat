@@ -107,6 +107,7 @@ class MessageSingleController extends GetxController {
     group.value = await Get.arguments[0];
     user.value = await Get.arguments[1];
     fechListChat();
+    scrollChat();
   }
 
   void fechListChat() async {
@@ -122,11 +123,9 @@ class MessageSingleController extends GetxController {
 
         messageList.addAll(listItem.reversed);
         messageList.refresh();
-        scrollChat();
         isLoading.value = false;
       }
     } catch (e) {
-      print('Error fetching chat: $e');
     }
   }
 
@@ -145,7 +144,6 @@ class MessageSingleController extends GetxController {
         isLoading.value = false;
       }
     } catch (e) {
-      print('Error fetching chat: $e');
     }
   }
 
@@ -156,12 +154,10 @@ class MessageSingleController extends GetxController {
       "id_group": Get.arguments[0].id,
       "id_user": await Utils.getStringValueWithKey('id')
     };
-    print(linkImage);
     var response = await APICaller.getInstance().post('chat', body);
     if (response != null) {
       textEditingMessage.clear();
       linkImage = '';
-      print('Gửi thành công');
     }
   }
 
