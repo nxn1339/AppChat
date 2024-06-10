@@ -43,7 +43,7 @@ class HomeController extends GetxController {
     await fecthStatusMessage();
     await checkLoading();
 
-    SocketIOCaller.getInstance().socket?.on('chat message', (data) {
+    SocketIOCaller.getInstance().socket?.on('messageGroup', (data) {
       messageNew = MDMessage.fromJson(data);
       for (int i = 0; i < messageList.length; i++) {
         if (messageList[i].idGroup == messageNew.idGroup) {
@@ -133,8 +133,7 @@ class HomeController extends GetxController {
           isLoadingStatus = false;
         }
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   fecthGroup() async {
@@ -150,8 +149,7 @@ class HomeController extends GetxController {
         listGroup.refresh();
         isLoadingGroup = false;
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   fecthGroupSingle() async {
@@ -167,8 +165,7 @@ class HomeController extends GetxController {
         await fechListUserGroup();
         isLoadingGroup = false;
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   fechListUserGroup() async {
@@ -189,8 +186,7 @@ class HomeController extends GetxController {
           listUser.refresh();
         }
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   fecthLastChat() async {

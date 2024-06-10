@@ -23,6 +23,7 @@ class MessageGroupController extends GetxController {
   int page = 1;
   int total = 0;
   RxBool isLoading = false.obs;
+  String idChat = "";
 
   @override
   void onInit() async {
@@ -40,9 +41,10 @@ class MessageGroupController extends GetxController {
         }
       }
     });
-    SocketIOCaller.getInstance().socket?.on('chat message', (data) {
+    SocketIOCaller.getInstance().socket?.on('messageGroup', (data) {
       sendChat();
       messageList.add(MDMessage.fromJson(data));
+      messageList.last.id = idChat;
       scrollChat();
     });
   }
@@ -123,8 +125,7 @@ class MessageGroupController extends GetxController {
         messageList.refresh();
         isLoading.value = false;
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   void fechListChatLoadMore() async {
@@ -141,11 +142,10 @@ class MessageGroupController extends GetxController {
         messageList.refresh();
         isLoading.value = false;
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
-  void sendChat() async {
+  sendChat() async {
     var body = {
       "content": textEditingMessage.text,
       "image": linkImage,
@@ -154,8 +154,22 @@ class MessageGroupController extends GetxController {
     };
     var response = await APICaller.getInstance().post('chat', body);
     if (response != null) {
+      Map<String, dynamic> json = response['data'][0];
+      MDMessage mdMessage = MDMessage.fromJson(json);
+      idChat = mdMessage.id.toString();
+
       textEditingMessage.clear();
       linkImage = '';
+    }
+  }
+
+  deleteChat(String id) async {
+    var response = await APICaller.getInstance().delete('chat/delete/$id');
+    if (response != null) {
+      messageList.where((x) => x.id == id).first.content = "Đã xóa tin này";
+      messageList.where((x) => x.id == id).first.image = "";
+      messageList.refresh();
+      Get.back();
     }
   }
 

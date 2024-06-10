@@ -473,29 +473,50 @@ class MessageSingle extends StatelessWidget {
                                     )
                               : Container(),
                           controller.messageList[index].content!.isNotEmpty
-                              ? Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                          color: UtilColor.buttonBlue,
-                                          borderRadius: const BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              topRight: Radius.circular(10),
-                                              bottomLeft: Radius.circular(10))),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 6),
-                                      margin: const EdgeInsets.only(
-                                          left: 3, right: 3),
-                                      child: Container(
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: Text(
-                                            controller.messageList[index]
-                                                    .content ??
-                                                "",
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ))),
+                              ? GestureDetector(
+                                  onLongPress: () {
+                                    Utils.showDialog(
+                                      title: "Xóa tin nhắn",
+                                      content:
+                                          Text('Bạn có chắc xóa tin nhắn này?'),
+                                      textCancel: 'Thoát',
+                                      textConfirm: 'Xóa',
+                                      onCancel: () {},
+                                      onConfirm: () {
+                                        controller.deleteChat(
+                                            controller.messageList[index].id ??
+                                                "");
+                                      },
+                                    );
+                                  },
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: UtilColor.buttonBlue,
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    topRight:
+                                                        Radius.circular(10),
+                                                    bottomLeft:
+                                                        Radius.circular(10))),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 6),
+                                        margin: const EdgeInsets.only(
+                                            left: 3, right: 3),
+                                        child: Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Text(
+                                              controller.messageList[index]
+                                                      .content ??
+                                                  "",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ))),
+                                  ),
                                 )
                               : Container()
                         ],
