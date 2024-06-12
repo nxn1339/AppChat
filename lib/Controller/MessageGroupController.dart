@@ -42,8 +42,11 @@ class MessageGroupController extends GetxController {
       }
     });
     SocketIOCaller.getInstance().socket?.on('messageGroup', (data) {
+      MDMessage newMess = new MDMessage.fromJson(data);
       sendChat();
-      messageList.add(MDMessage.fromJson(data));
+      if (newMess.idGroup == group.value.id) {
+        messageList.add(MDMessage.fromJson(data));
+      }
       messageList.last.id = idChat;
       scrollChat();
     });
@@ -125,7 +128,11 @@ class MessageGroupController extends GetxController {
         messageList.refresh();
         isLoading.value = false;
       }
-    } catch (e) {}
+    } catch (e) {
+    } finally {
+      page = 2;
+      fechListChatLoadMore();
+    }
   }
 
   void fechListChatLoadMore() async {

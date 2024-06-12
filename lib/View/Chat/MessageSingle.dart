@@ -656,7 +656,7 @@ class MessageSingle extends StatelessWidget {
         'avatar': avatar,
         'image': image,
         'name': name,
-        'id_group': Get.arguments[0].id,
+        'id_group': idGroup,
       });
 
       SocketIOCaller.getInstance().socket?.emit('readMessage', {

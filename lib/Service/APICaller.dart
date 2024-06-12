@@ -62,7 +62,6 @@ class APICaller {
     if (jsonDecode(response.body)['code'] != 200) {
       Utils.showSnackBar(
           title: 'Thông báo', message: jsonDecode(response.body)['message']);
-      checkToken(jsonDecode(response.body)['code']);
       return null;
     }
     return jsonDecode(response.body);

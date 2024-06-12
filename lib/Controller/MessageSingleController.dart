@@ -43,8 +43,11 @@ class MessageSingleController extends GetxController {
       }
     });
     SocketIOCaller.getInstance().socket?.on('messageSingle', (data) {
+      MDMessage newMess = new MDMessage.fromJson(data);
       sendChat();
-      messageList.add(MDMessage.fromJson(data));
+      if (newMess.idGroup == group.value.id) {
+        messageList.add(MDMessage.fromJson(data));
+      }
       messageList.last.id = idChat;
       scrollChat();
     });
@@ -127,7 +130,11 @@ class MessageSingleController extends GetxController {
         messageList.refresh();
         isLoading.value = false;
       }
-    } catch (e) {}
+    } catch (e) {
+    } finally {
+      page = 2;
+      fechListChatLoadMore();
+    }
   }
 
   void fechListChatLoadMore() async {
@@ -206,7 +213,7 @@ class MessageSingleController extends GetxController {
     }
     scrollControllerLoadMore.value.animateTo(
       (scrollControllerLoadMore.value.position.maxScrollExtent * 3),
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
   }

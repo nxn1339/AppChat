@@ -75,7 +75,6 @@ class AddMemberGroupController extends GetxController {
         }
       }
     } catch (e) {
-      Utils.showSnackBar(title: "Thông báo", message: 'Có lỗi xảy ra !');
     } finally {
       Get.back();
       Utils.showSnackBar(

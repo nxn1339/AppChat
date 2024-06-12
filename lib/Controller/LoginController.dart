@@ -36,7 +36,6 @@ class LoginController extends GetxController {
         Utils.showSnackBar(title: 'Thông báo', message: response['message']);
       }
     } catch (e) {
-      Utils.showSnackBar(title: 'Thông báo', message: '$e');
     }
   }
 

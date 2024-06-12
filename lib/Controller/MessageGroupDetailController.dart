@@ -72,7 +72,6 @@ class MessageGroupDetailController extends GetxController {
         Utils.showSnackBar(title: 'Thông báo', message: 'Xóa nhóm thành công!');
       }
     } catch (e) {
-      Utils.showSnackBar(title: 'Thông báo', message: '$e');
     }
   }
 
@@ -97,7 +96,6 @@ class MessageGroupDetailController extends GetxController {
         }
       }
     } catch (e) {
-      Utils.showSnackBar(title: 'Thông báo', message: '$e');
     }
   }
 

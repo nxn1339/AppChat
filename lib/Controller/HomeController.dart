@@ -290,7 +290,6 @@ class HomeController extends GetxController {
             title: 'Thông báo', message: 'Xóa đoạn chat thành công!');
       }
     } catch (e) {
-      Utils.showSnackBar(title: 'Thông báo', message: '$e');
     }
   }
 
