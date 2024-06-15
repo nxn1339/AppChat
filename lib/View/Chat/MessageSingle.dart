@@ -162,10 +162,14 @@ class MessageSingle extends StatelessWidget {
                                                                     horizontal:
                                                                         10),
                                                             child: Text(
-                                                                'File .${controller.getFileExtension(controller.messageList[index].image.toString())}',
+                                                                controller.getFileExtension(controller
+                                                                    .messageList[
+                                                                        index]
+                                                                    .image
+                                                                    .toString()),
                                                                 style: const TextStyle(
                                                                     fontSize:
-                                                                        18,
+                                                                        14,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w500,
@@ -314,10 +318,14 @@ class MessageSingle extends StatelessWidget {
                                                                     horizontal:
                                                                         10),
                                                             child: Text(
-                                                                'File .${controller.getFileExtension(controller.messageList[index].image.toString())}',
+                                                                controller.getFileExtension(controller
+                                                                    .messageList[
+                                                                        index]
+                                                                    .image
+                                                                    .toString()),
                                                                 style: const TextStyle(
                                                                     fontSize:
-                                                                        18,
+                                                                        14,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w500,
@@ -440,36 +448,73 @@ class MessageSingle extends StatelessWidget {
                                           .messageList[index].image
                                           .toString()) !=
                                       true
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                          color: UtilColor.buttonBlack,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 4),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 10),
-                                      child: Text(
-                                          'File .${controller.getFileExtension(controller.messageList[index].image.toString())}',
-                                          style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.white)),
-                                    )
-                                  : Image.network(
-                                      '${UtilLink.BASE_URL}${controller.messageList[index].image}',
-                                      height: 60,
-                                      width: 60,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Container(
-                                          height: 60,
-                                          width: 60,
-                                          color: Colors.amber,
-                                          child: Text('Error'),
+                                  ? GestureDetector(
+                                      onLongPress: () {
+                                        Utils.showDialog(
+                                          title: "Xóa tin nhắn",
+                                          content: Text(
+                                              'Bạn có chắc xóa tin nhắn này?'),
+                                          textCancel: 'Thoát',
+                                          textConfirm: 'Xóa',
+                                          onCancel: () {},
+                                          onConfirm: () {
+                                            controller.deleteChat(controller
+                                                    .messageList[index].id ??
+                                                "");
+                                          },
                                         );
                                       },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: UtilColor.buttonBlack,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 4),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10, horizontal: 10),
+                                        child: Text(
+                                            controller.getFileExtension(
+                                                controller
+                                                    .messageList[index].image
+                                                    .toString()),
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.white)),
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onLongPress: () {
+                                        Utils.showDialog(
+                                          title: "Xóa tin nhắn",
+                                          content: Text(
+                                              'Bạn có chắc xóa tin nhắn này?'),
+                                          textCancel: 'Thoát',
+                                          textConfirm: 'Xóa',
+                                          onCancel: () {},
+                                          onConfirm: () {
+                                            controller.deleteChat(controller
+                                                    .messageList[index].id ??
+                                                "");
+                                          },
+                                        );
+                                      },
+                                      child: Image.network(
+                                        '${UtilLink.BASE_URL}${controller.messageList[index].image}',
+                                        height: 60,
+                                        width: 60,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Container(
+                                            height: 60,
+                                            width: 60,
+                                            color: Colors.amber,
+                                            child: Text('Error'),
+                                          );
+                                        },
+                                      ),
                                     )
                               : Container(),
                           controller.messageList[index].content!.isNotEmpty
