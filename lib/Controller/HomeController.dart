@@ -143,6 +143,7 @@ class HomeController extends GetxController {
           .get('group/0/$uuid/?keyword=${search.text}');
       if (response != null) {
         List<dynamic> list = response['data'];
+        
         var listItem =
             list.map((dynamic json) => MDGroup.fromJson(json)).toList();
         listGroup.addAll(listItem);
@@ -289,8 +290,7 @@ class HomeController extends GetxController {
         Utils.showSnackBar(
             title: 'Thông báo', message: 'Xóa đoạn chat thành công!');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   void logOut() async {

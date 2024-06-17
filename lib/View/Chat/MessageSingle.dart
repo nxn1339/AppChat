@@ -18,6 +18,13 @@ class MessageSingle extends StatelessWidget {
         automaticallyImplyLeading: true,
         foregroundColor: UtilColor.textBase,
         elevation: 0.5,
+        actions: [
+          ElevatedButton(
+              onPressed: () {
+                showDialogSearch(context);
+              },
+              child: Icon(Icons.search)),
+        ],
         title: Obx(
           () => Column(
             children: [
@@ -657,6 +664,39 @@ class MessageSingle extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  showDialogSearch(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Tìm tin nhắn...',
+                  ),
+                  controller: controller.textEditingSearch,
+                  onChanged: (value) {},
+                ),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    controller.createStart();
+                    Get.back();
+                  },
+                  child: Text('Tìm'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:chat_app/Model/MDGroup.dart';
@@ -14,6 +15,7 @@ import 'package:intl/intl.dart';
 
 class MessageGroupController extends GetxController {
   TextEditingController textEditingMessage = TextEditingController();
+  TextEditingController textEditingSearch = TextEditingController();
   RxList<MDMessage> messageList = RxList<MDMessage>();
   RxString uuid = "".obs;
   Rx<MDGroup> group = new MDGroup().obs;
@@ -116,8 +118,8 @@ class MessageGroupController extends GetxController {
   void fechListChat() async {
     isLoading.value = true;
     try {
-      var response = await APICaller.getInstance()
-          .get('chat/${Get.arguments.id}?page=$page');
+      var response = await APICaller.getInstance().get(
+          'chat/${Get.arguments.id}?page=$page&keyword=${textEditingSearch.text}');
       if (response != null) {
         total = response['meta']['total'];
         List<dynamic> list = response['data'];
@@ -137,8 +139,8 @@ class MessageGroupController extends GetxController {
 
   void fechListChatLoadMore() async {
     try {
-      var response = await APICaller.getInstance()
-          .get('chat/${Get.arguments.id}?page=$page');
+      var response = await APICaller.getInstance().get(
+          'chat/${Get.arguments.id}?page=$page&keyword=${textEditingSearch.text}');
       if (response != null) {
         total = response['meta']['total'];
         List<dynamic> list = response['data'];
@@ -252,11 +254,5 @@ class MessageGroupController extends GetxController {
     if (imageFile.isNotEmpty) {
       imageFile.clear();
     }
-  }
-
-  refreshData() {
-    page = 1;
-    messageList.clear();
-    fechListChat();
   }
 }

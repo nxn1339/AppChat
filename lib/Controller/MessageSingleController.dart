@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 
 class MessageSingleController extends GetxController {
   TextEditingController textEditingMessage = TextEditingController();
+  TextEditingController textEditingSearch = TextEditingController();
   RxList<MDMessage> messageList = RxList<MDMessage>();
   RxString uuid = "".obs;
   Rx<MDGroup> group = new MDGroup().obs;
@@ -118,8 +119,8 @@ class MessageSingleController extends GetxController {
   void fechListChat() async {
     isLoading.value = true;
     try {
-      var response = await APICaller.getInstance()
-          .get('chat/${Get.arguments[0].id}?page=$page');
+      var response = await APICaller.getInstance().get(
+          'chat/${Get.arguments[0].id}?page=$page&keyword=${textEditingSearch.text}');
       if (response != null) {
         total = response['meta']['total'];
         List<dynamic> list = response['data'];
@@ -139,8 +140,8 @@ class MessageSingleController extends GetxController {
 
   void fechListChatLoadMore() async {
     try {
-      var response = await APICaller.getInstance()
-          .get('chat/${Get.arguments[0].id}?page=$page');
+      var response = await APICaller.getInstance().get(
+          'chat/${Get.arguments[0].id}?page=$page&keyword=${textEditingSearch.text}');
       if (response != null) {
         total = response['meta']['total'];
         List<dynamic> list = response['data'];

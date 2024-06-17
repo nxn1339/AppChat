@@ -69,6 +69,11 @@ class MessageGroup extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
+          ElevatedButton(
+              onPressed: () {
+                showDialogSearch(context);
+              },
+              child: Icon(Icons.search)),
           GestureDetector(
             onTap: () {
               Navigation.navigateTo(
@@ -709,6 +714,39 @@ class MessageGroup extends StatelessWidget {
                 },
               ),
             ],
+          ),
+        );
+      },
+    );
+  }
+
+  showDialogSearch(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Tìm tin nhắn...',
+                  ),
+                  controller: controller.textEditingSearch,
+                  onChanged: (value) {},
+                ),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    controller.createStart();
+                    Get.back();
+                  },
+                  child: Text('Tìm'),
+                ),
+              ],
+            ),
           ),
         );
       },
