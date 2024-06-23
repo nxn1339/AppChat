@@ -40,13 +40,6 @@ class AddMemberGroup extends StatelessWidget {
         color: Colors.white,
         child: Column(
           children: [
-            SizedBox(
-              height: 10,
-            ),
-            Utils.textFieldCustom(
-                maxLines: 1,
-                icon: const Icon(Icons.search),
-                hintText: 'Tìm kiếm'),
             const SizedBox(
               height: 10,
             ),

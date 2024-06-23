@@ -51,8 +51,7 @@ class MessageGroupDetailController extends GetxController {
         listUser.addAll(listItem);
         listUser.refresh();
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   void refreshListUserGroup() {
@@ -71,8 +70,7 @@ class MessageGroupDetailController extends GetxController {
         Get.close(3);
         Utils.showSnackBar(title: 'Thông báo', message: 'Xóa nhóm thành công!');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future leaveGrouporDeleteUser(String idUser, String action) async {
@@ -95,8 +93,7 @@ class MessageGroupDetailController extends GetxController {
               title: 'Thông báo', message: 'Rời nhóm thành công!');
         }
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   void updateGroup() async {
@@ -109,7 +106,7 @@ class MessageGroupDetailController extends GetxController {
     var body = {
       "id": group.value.id,
       "name": textEditNameGroup.text,
-      "image": linkImage,
+      "image": linkImage != '' ? linkImage : '',
       "id_user": group.value.owner
     };
     try {
@@ -120,8 +117,7 @@ class MessageGroupDetailController extends GetxController {
         }
         Get.close(2);
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   postImage() async {
